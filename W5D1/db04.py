@@ -8,14 +8,14 @@ cur = connection.cursor()
 sql1 = "insert into dept values (:deptno, :dname, :loc)"
 sql2 = "insert into dept values (:deptno, NULL, :loc)"
 sql3 = "insert into dept (deptno, loc) values (:deptno, :loc)"
-sql4 = "select * from dept"
+# sql4 = "select * from dept"
 #4. 실행
-# cur.execute(sql1,[1,"SALEMAN","SEOUL"])
-# cur.execute(sql1,[2,None,"BUSAN"])
-# cur.execute(sql2,[2,"BUSAN"])
-# cur.execute(sql3,[2,"BUSAN"])
-cur.execute(sql4)
-# connection.commit()
+cur.execute(sql1,[1,"SALEMAN","SEOUL"])
+cur.execute(sql1,[2,None,"BUSAN"])
+cur.execute(sql2,[2,"BUSAN"])
+cur.execute(sql3,[2,"BUSAN"])
+# cur.execute(sql4)
+connection.commit()
 #5. 로직처리
 for i in cur:
     print(i)
