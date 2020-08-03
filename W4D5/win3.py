@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt
 import time
 
 class MyApp(QWidget):
-    img_link = ["./img/room.jpg","./img/bed.webp"]
+    img_link = ["./img/room.jpg","./img/bed.webp","./img/grass.jpeg"]
     i = 0
     def __init__(self):
         super().__init__()
@@ -33,16 +33,13 @@ class MyApp(QWidget):
             self.movert()
             self.moveup()
         elif e.key() == Qt.Key_Space:
-            print(e.key())
             self.changemap()
 
     def changemap(self):
         self.i += 1
-        print(self.i,len(self.img_link))
         if self.i == len(self.img_link):
             self.i = 0
         self.img.setPixmap(QPixmap(self.img_link[self.i]))
-        print(self.i,len(self.img_link))
     def moveup(self,l=10):
         self.character.move(self.character.x(),self.character.y()-l)
     def movelf(self,l=10):
