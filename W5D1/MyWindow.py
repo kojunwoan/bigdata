@@ -3,6 +3,7 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 import time
+from random import randint
 
 class MyWindow(QMainWindow):
     def __init__(self):
@@ -16,11 +17,11 @@ class MyWindow(QMainWindow):
         self.show()
 
     def newWindow(self):
-        for i in range(5):
-            time.sleep(0.2)
+        for i in range(1000):
             self.nw = MyWindow2(self)
-            self.nw.move(100+i*10,100+i*10)
+            self.nw.move(randint(0,1620),randint(0,780))
             self.nw.show()
+        # self.hide()
 
 class MyWindow2(QMainWindow):
     def __init__(self, parent):

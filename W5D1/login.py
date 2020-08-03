@@ -1,6 +1,6 @@
 import cx_Oracle
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QLineEdit, QMessageBox, QHBoxLayout, QVBoxLayout
+from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QCoreApplication
@@ -8,34 +8,6 @@ from PyQt5.QtCore import QCoreApplication
 class MyApp(QWidget):
     def __init__(self):
         super().__init__()
-        self.initUI()
-
-    def dbcheck(self):
-        #1. connection 객체 생성
-        connection = cx_Oracle.connect("scott","tiger","192.168.0.68:1521/orcl")
-        #2. cursor 객체 생성
-        cur = connection.cursor()
-        #3. 사용할 sql문 객체
-        sql = "select id from member where id = :id and pw = :pw"
-        #4. 실행
-        cur.execute(sql,id=self.leID.text(),pw=self.lePW.text())
-        #5. 로직처리
-        for id in cur:
-            if id!=None:
-                print("로그인성공")
-                QMessageBox.question(self,"로그인 성공", "조선의 궁궐에 당도한 것을 환영하오, 낯선이여.", QMessageBox.Yes, QMessageBox.Yes)
-        #6. 자원 반납
-        connection.close()
-    def login(self):
-        pass
-    def reg(self):
-        pass
-    def close(self):
-        if QMessageBox.question(self, "메세지", "정말 나갈려구?", QMessageBox.Yes| QMessageBox.No, QMessageBox.No) == QMessageBox.Yes:
-            QCoreApplication.instance().quit()
-
-
-    def initUI(self):
         #PyQt에서 이벤트(signal)처리할때 사용되는 함수를 이벤트 핸들러(slot)이라고 한다.
         
         back = QPixmap("./img/0803.jpg")
@@ -52,35 +24,27 @@ class MyApp(QWidget):
         self.labelID.setFont(font1)
         self.labelPW.setFont(font1)
 
-        self.labelID.move(470,150)
-        self.labelPW.move(470,230)
-
-        self.labelID.resize(120,50)
-        self.labelPW.resize(120,50)
+        self.labelID.setGeometry(470,150,120,50)
+        self.labelPW.setGeometry(470,230,120,50)
 
         #QlineEdit
         self.leID = QLineEdit(self)
         self.lePW = QLineEdit(self)
 
-        self.leID.move(550,150)
-        self.lePW.move(550,230)
-        self.leID.resize(120,50)
-        self.lePW.resize(120,50)
+        self.leID.setGeometry(550,150,120,50)
+        self.lePW.setGeometry(550,230,120,50)
 
         #푸쉬버튼 객체 생성
         self.btnlogin = QPushButton("헬조선 로그인",self)
-        self.btnlogin.resize(120,50)
-        self.btnlogin.move(550,330)
+        self.btnlogin.setGeometry(550,330,120,50)
         self.btnlogin.clicked.connect(self.dbcheck)
 
         self.btnreg = QPushButton("헬조선 가입",self)
-        self.btnreg.resize(120,50)
-        self.btnreg.move(550,400)
-        self.btnreg.clicked.connect(self.reg)
+        self.btnreg.setGeometry(550,400,120,50)
+        self.btnreg.clicked.connect(self.register)
 
         btnclose = QPushButton("X",self)
-        btnclose.resize(30,30)
-        btnclose.move(660,10)
+        btnclose.setGeometry(660,10,30,30)
         # btnclose.clicked.connect(QCoreApplication.instance().quit)
         btnclose.clicked.connect(self.close)
 
@@ -115,10 +79,118 @@ class MyApp(QWidget):
         """
 
         self.setWindowTitle("Welcome to Hell Chosun, stranger")
-        self.move(0,0)
         self.setWindowIcon(QIcon('./img/exit.jpg'))
-        self.resize(720,950)
+        self.setGeometry(0,0,720,950)
         self.show()
+
+
+    def dbcheck(self):
+        #1. connection 객체 생성
+        connection = cx_Oracle.connect("scott","tiger","192.168.0.68:1521/orcl")
+        #2. cursor 객체 생성
+        cur = connection.cursor()
+        #3. 사용할 sql문 객체
+        sql = "select id from member where id = :id and pw = :pw"
+        #4. 실행
+        cur.execute(sql,id=self.leID.text(),pw=self.lePW.text())
+        #5. 로직처리
+        for id in cur:
+            if id!=None:
+                print("로그인성공")
+                QMessageBox.question(self,"로그인 성공", "조선의 궁궐에 당도한 것을 환영하오, 낯선이여.", QMessageBox.Yes, QMessageBox.Yes)
+        #6. 자원 반납
+        connection.close()
+    def login(self):
+        pass
+    def register(self):
+        self.nw = MyRegisterWindow(self)
+        self.nw.show()
+
+    def close(self):
+        if QMessageBox.question(self, "메세지", "정말 나갈려구?", QMessageBox.Yes| QMessageBox.No, QMessageBox.No) == QMessageBox.Yes:
+            QCoreApplication.instance().quit()
+
+class MyRegisterWindow(QMainWindow):
+    def __init__(self,parent):
+        super().__init__(parent)
+        self.setWindowTitle("헬조선 가입")
+        self.setGeometry(100,100,350,300)
+        self.lbrgID = QLabel("ID",self)
+        self.lbrgPW = QLabel("PW",self)
+        self.lbrgNa = QLabel("Name",self)
+
+        self.lergID = QLineEdit(self)
+        self.lergPW = QLineEdit(self)
+        self.lergNa = QLineEdit(self)
+
+        self.submit = QPushButton("가입하기",self)
+        self.submit.clicked.connect(self.regdit)
+
+# setGeometry로 해보자
+        self.lbrgID.setGeometry(50,50,50,30)
+        self.lbrgPW.setGeometry(50,100,50,30)
+        self.lbrgNa.setGeometry(50,150,50,30)
+
+        self.lergID.setGeometry(100,50,200,30)
+        self.lergPW.setGeometry(100,100,200,30)
+        self.lergNa.setGeometry(100,150,200,30)
+
+        self.submit.setGeometry(50,200,250,50)
+
+        self.setCentralWidget(MyWidget())
+    def regdit(self):
+        connect2 = cx_Oracle.connect("scott","tiger","192.168.0.68:1521/orcl")
+        cur2 = connect2.cursor()
+        sql2 = "insert into member values (:id, :pw, :name, 1)"
+        cur2.execute(sql2,[self.lergID.text(),self.lergPW.text(),self.lergNa.text()])
+        connect2.commit()
+        connect2.close()
+        QMessageBox.question(self,"가입 끝~~","가입 완료", QMessageBox.Yes, QMessageBox.Yes)
+        self.close()
+
+class MyWidget(QWidget):
+    def __init__(slef):
+        super().__init__()
+        
+        '''
+        self.hboxID = QHBoxLayout()
+        self.hboxPW = QHBoxLayout()
+        self.hboxNa = QHBoxLayout()
+        self.hboxGr = QHBoxLayout()
+        self.hboxBt = QHBoxLayout()
+
+        self.hboxID.addStretch(1)
+        self.hboxID.addWidget(self.lbrgID)
+        self.hboxID.addWidget(self.lergID)
+        self.hboxID.addStretch(1)
+
+        self.hboxPW.addStretch(1)
+        self.hboxPW.addWidget(self.lbrgPW)
+        self.hboxPW.addWidget(self.lergPW)
+        self.hboxPW.addStretch(1)
+
+        self.hboxNa.addStretch(1)
+        self.hboxNa.addWidget(self.lbrgNa)
+        self.hboxNa.addWidget(self.lergNa)
+        self.hboxNa.addStretch(1)
+
+        self.hboxGr.addStretch(1)
+        self.hboxGr.addWidget(self.lbrgGr)
+        self.hboxGr.addWidget(self.lergGr)
+        self.hboxGr.addStretch(1)
+
+        self.hboxBt.addStretch(1)
+        self.hboxBt.addWidget(self.submit)
+        self.hboxBt.addStretch(1)
+
+        vbox = QVBoxLayout()
+        vbox.addLayout(self.hboxID)
+        vbox.addLayout(self.hboxPW)
+        vbox.addLayout(self.hboxNa)
+        vbox.addLayout(self.hboxGr)
+        vbox.addLayout(self.hboxBt)
+        self.setLayout(vbox)
+        '''
 
 if __name__=="__main__":
     app = QApplication(sys.argv)
