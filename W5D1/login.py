@@ -4,6 +4,24 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QCoreApplication
+from dbConnect import DbConnect
+
+'''
+QWidjet
+위젯은 한 화면에 표시할 수 있는 것을 목적으로 한다.
+윈도우나 버튼 모든 위젯 화면에 무언가를 표시하거나 키보드/마우스에서 사용자의 입력을 받아들이는 것.
+버튼, 슬라이드, 뷰, 대화상자 등등 사용자의 상호 작용을 나타내는 사각형 영역
+
+
+QMainWindow
+메인 창에서는 최상위 위젯이고 메뉴바, 도구모음, 상태표시줄 등을 포함하는 미리 정의된 레이아웃을 사용함
+창은 부모/자식의 상단이며 일반적으로 제목 표시줄과 테두리를 표시
+
+QDialog
+특수한 종류의 창으로 보통 일시적
+알림, 입력, 선택
+'''
+
 
 class MyApp(QWidget):
     def __init__(self):
@@ -17,22 +35,19 @@ class MyApp(QWidget):
         #라벨 2개
         self.labelID = QLabel("ID",self)
         self.labelPW = QLabel("PW",self)
+        self.labelID.setGeometry(470,150,120,50)
+        self.labelPW.setGeometry(470,230,120,50)
 
         #폰트 크게
         font1 = self.labelID.font()
         font1.setPointSize(30)
         font1.setBold(True)
-        
         self.labelID.setFont(font1)
         self.labelPW.setFont(font1)
-
-        self.labelID.setGeometry(470,150,120,50)
-        self.labelPW.setGeometry(470,230,120,50)
 
         #QlineEdit
         self.leID = QLineEdit(self)
         self.lePW = QLineEdit(self)
-
         self.leID.setGeometry(550,150,120,50)
         self.lePW.setGeometry(550,230,120,50)
 
@@ -41,7 +56,7 @@ class MyApp(QWidget):
         self.btnlogin.setGeometry(550,330,120,50)
         self.btnlogin.clicked.connect(self.dbcheck)
 
-        self.btnreg = QPushButton("헬조선 가입",self)
+        self.btnreg = QPushButton("헬조선 가입1",self)
         self.btnreg.setGeometry(550,400,120,50)
         self.btnreg.clicked.connect(self.register)
         
@@ -49,40 +64,14 @@ class MyApp(QWidget):
         self.btnreg2.setGeometry(550,450,120,50)
         self.btnreg2.clicked.connect(self.register2)
 
+        self.btnreg3 = QPushButton("헬조선 가입3",self)
+        self.btnreg3.setGeometry(550,500,120,50)
+        self.btnreg3.clicked.connect(self.register3)
+
         btnclose = QPushButton("X",self)
         btnclose.setGeometry(660,10,30,30)
         # btnclose.clicked.connect(QCoreApplication.instance().quit)
         btnclose.clicked.connect(self.close)
-
-        '''
-        LayOut, BoxLayout, 수평상자 수직상자
-        '''
-
-        """
-        hboxID = QHBoxLayout()
-        hboxID.addStretch(1)
-        hboxID.addWidget(self.labelID)
-        hboxID.addWidget(self.leID)
-        hboxID.addStretch(1)
-
-        hboxPW = QHBoxLayout()
-        hboxPW.addStretch(1)
-        hboxPW.addWidget(self.labelPW)
-        hboxPW.addWidget(self.lePW)
-        hboxPW.addStretch(1)
-
-        hboxbtn = QHBoxLayout()
-        hboxbtn.addStretch(1)
-        hboxbtn.addWidget(self.btn1)
-        hboxbtn.addWidget(self.btn3)
-        hboxbtn.addStretch(1)
-
-        vbox = QVBoxLayout()
-        vbox.addLayout(hboxID)
-        vbox.addLayout(hboxPW)
-        vbox.addLayout(hboxbtn)
-        self.setLayout(vbox)
-        """
 
         self.setWindowTitle("Welcome to Hell Chosun, stranger")
         self.setWindowIcon(QIcon('./img/exit.jpg'))
@@ -92,34 +81,30 @@ class MyApp(QWidget):
 
     def dbcheck(self):
         #1. connection 객체 생성
-        connection = cx_Oracle.connect("scott","tiger","192.168.0.68:1521/orcl")
+        db = DbConnect("scott","tiger","192.168.0.68","orcl")
         #2. cursor 객체 생성
-        cur = connection.cursor()
         #3. 사용할 sql문 객체
-        sql = "select id from member where id = :id and pw = :pw"
         #4. 실행
-        cur.execute(sql,id=self.leID.text(),pw=self.lePW.text())
+        print(db.execute("select id from member where id = '{}' and pw = '{}'".format(self.leID.text(),self.lePW.text())))
         #5. 로직처리
-        for id in cur:
-            if id!=None:
-                print("로그인성공")
-                QMessageBox.question(self,"로그인 성공", "조선의 궁궐에 당도한 것을 환영하오, 낯선이여.", QMessageBox.Yes, QMessageBox.Yes)
         #6. 자원 반납
-        connection.close()
     def login(self):
         pass
     def register(self):
-        self.nw = MyRegisterWindow(self)
-        self.nw.show()
+        self.nw1 = MyRegisterWindow1(self)
+        self.nw1.show()
     def register2(self):
-        self.nw = MyRegisterWindow2(self)
-        self.nw.show()
+        self.nw2 = MyRegisterWindow2(self)
+        self.nw2.show()
+    def register3(self):
+        self.nw3 = MyRegisterWindow3(self)
+        self.nw3.show()
 
     def close(self):
         if QMessageBox.question(self, "메세지", "정말 나갈려구?", QMessageBox.Yes| QMessageBox.No, QMessageBox.No) == QMessageBox.Yes:
             QCoreApplication.instance().quit()
 
-class MyRegisterWindow(QMainWindow):
+class MyRegisterWindow1(QMainWindow):
     def __init__(self,parent):
         super().__init__(parent)
         self.setWindowTitle("헬조선 가입")
@@ -148,9 +133,7 @@ class MyRegisterWindow(QMainWindow):
 
     def regdit(self):
         connect2 = cx_Oracle.connect("scott","tiger","192.168.0.68:1521/orcl")
-        cur2 = connect2.cursor()
-        sql2 = "insert into member values (:id, :pw, :name, 1)"
-        cur2.execute(sql2,[self.lergID.text(),self.lergPW.text(),self.lergNa.text()])
+        connect2.cursor().execute("insert into member values (:id, :pw, :name, 1)",[self.lergID.text(),self.lergPW.text(),self.lergNa.text()])
         connect2.commit()
         connect2.close()
         QMessageBox.question(self,"가입 끝~~","가입 완료", QMessageBox.Yes, QMessageBox.Yes)
@@ -159,13 +142,14 @@ class MyRegisterWindow(QMainWindow):
 class MyRegisterWindow2(QMainWindow):
     def __init__(self,parent):
         super().__init__(parent)
-        self.setCentralWidget(MyWidget(self))
+        self.setWindowTitle("헬조선 가입2")
+        self.setCentralWidget(MyWidget2(self))
         
 
-class MyWidget(QWidget):
+class MyWidget2(QWidget):
     def __init__(self,parent):
         super().__init__(parent)
-        self.setWindowTitle("헬조선 가입")
+        self.parent = parent
         self.setGeometry(100,100,350,300)
         self.rglbID = QLabel("ID",self)
         self.rglbPW = QLabel("PW",self)
@@ -177,23 +161,25 @@ class MyWidget(QWidget):
 
         self.submit = QPushButton("가입하기",self)
         self.submit.clicked.connect(self.regdit)
+        '''
+        LayOut, BoxLayout, 수평상자 수직상자
+        '''
+        vboxlb = QVBoxLayout()
+        vboxlb.addWidget(self.rglbID)
+        vboxlb.addWidget(self.rglbPW)
+        vboxlb.addWidget(self.rglbNa)
 
-        self.vboxlb = QVBoxLayout()
-        self.vboxlb.addWidget(self.rglbID)
-        self.vboxlb.addWidget(self.rglbPW)
-        self.vboxlb.addWidget(self.rglbNa)
+        vboxle = QVBoxLayout()
+        vboxle.addWidget(self.rgleID)
+        vboxle.addWidget(self.rglePW)
+        vboxle.addWidget(self.rgleNa)
 
-        self.vboxle = QVBoxLayout()
-        self.vboxle.addWidget(self.rgleID)
-        self.vboxle.addWidget(self.rglePW)
-        self.vboxle.addWidget(self.rgleNa)
-
-        self.hboxtxt = QHBoxLayout()
-        self.hboxtxt.addLayout(self.vboxlb)
-        self.hboxtxt.addLayout(self.vboxle)
+        hboxtxt = QHBoxLayout()
+        hboxtxt.addLayout(vboxlb)
+        hboxtxt.addLayout(vboxle)
 
         vbox = QVBoxLayout()
-        vbox.addLayout(self.hboxtxt)
+        vbox.addLayout(hboxtxt)
         vbox.addWidget(self.submit)
         self.setLayout(vbox)
 
@@ -203,7 +189,54 @@ class MyWidget(QWidget):
         connect2.commit()
         connect2.close()
         QMessageBox.question(self,"가입 끝~~","가입 완료", QMessageBox.Yes, QMessageBox.Yes)
-        self.close()
+        self.parent.close()
+
+
+
+
+class MyRegisterWindow3(QMainWindow):
+    def __init__(self,parent):
+        super().__init__(parent)
+        self.setWindowTitle("헬조선 가입3")
+        self.setCentralWidget(MyWidget3(self))
+        
+
+class MyWidget3(QWidget):
+    def __init__(self,parent):
+        super().__init__(parent)
+        self.parent = parent
+        self.setGeometry(100,100,350,300)
+        self.rglbID = QLabel("ID",self)
+        self.rglbPW = QLabel("PW",self)
+        self.rglbNa = QLabel("Name",self)
+
+        self.rgleID = QLineEdit(self)
+        self.rglePW = QLineEdit(self)
+        self.rgleNa = QLineEdit(self)
+
+        self.submit = QPushButton("가입하기",self)
+        self.submit.clicked.connect(self.regdit)
+        '''
+        그리드 레이아웃
+        '''
+        grid = QGridLayout()
+        self.setLayout(grid)
+
+        grid.addWidget(self.rglbID,0,0)
+        grid.addWidget(self.rgleID,0,1)
+        grid.addWidget(self.rglbPW,1,0)
+        grid.addWidget(self.rglePW,1,1)
+        grid.addWidget(self.rglbNa,2,0)
+        grid.addWidget(self.rgleNa,2,1)
+        grid.addWidget(self.submit,3,0,1,2)
+
+    def regdit(self):
+        connect2 = cx_Oracle.connect("scott","tiger","192.168.0.68:1521/orcl")
+        connect2.cursor().execute("insert into member values (:id, :pw, :name, 1)",[self.rgleID.text(),self.rglePW.text(),self.rgleNa.text()])
+        connect2.commit()
+        connect2.close()
+        QMessageBox.question(self,"가입 끝~~","가입 완료", QMessageBox.Yes, QMessageBox.Yes)
+        self.parent.close()
 
 if __name__=="__main__":
     app = QApplication(sys.argv)

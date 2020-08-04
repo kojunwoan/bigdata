@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QWidget, QApplication, QPushButton, QLabel
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 import time
-
+import threading
 class MyApp(QWidget):
     img_link = ["./img/room.jpg","./img/bed.webp","./img/grass.jpeg"]
     i = 0
@@ -33,7 +33,34 @@ class MyApp(QWidget):
             self.movert()
             self.moveup()
         elif e.key() == Qt.Key_Space:
-            self.changemap()
+            # self.changemap()
+            threading.Thread(target=self.moveTurtle).start()
+            # threading.Thread(target=self.moveSpaceX).start()
+            # threading.Thread(target=self.moveSpaceY).start()
+    def moveTurtle(self):
+        cx = self.character.x()
+        cy = self.character.y()
+        y = 0
+        for x in range(2,40,2):
+            y = -x**2 +4*x -2
+            self.character.move(cx+x,cy+y)
+            time.sleep(0.03)
+
+
+    def moveSpaceX(self):
+        for i in range(11):
+            if self.character.text() == "_(┐「ε:)_":
+                self.movert(20)
+            else:
+                self.movelf(20)
+            time.sleep(0.03)
+    def moveSpaceY(self):
+        print("스페이스 눌림")
+        h = 30
+        for i in range(11):
+            self.moveup(h)
+            h -= 6
+            time.sleep(0.03)
 
     def changemap(self):
         self.i += 1
@@ -61,16 +88,6 @@ class MyApp(QWidget):
         self.character = QLabel("_(:3」∠)_",self)
         self.character.move(500,300)
         self.character.resize(320,70)
-
-        # btnl = QPushButton("<",self)
-        # btn1.resize(50,50)
-        # btn1.move(10,10)
-        
-        # btn2 = QPushButton(">",self)
-        # btn2.resize(50,50)
-        # btn2.move(70,10)
-
-        # btn2.clicked.connect(self.changemap)
 
         chas = self.character.font()
         chas.setPointSize(50)
