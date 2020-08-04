@@ -20,17 +20,18 @@ class MyApp(QWidget):
             vbox.addLayout(hbox[i])
         self.setLayout(vbox)
 
-        # 눌렀을때 이벤트 만들기 
         for btn in self.btn:
-            self.click(btn,btn.text())
+            self.click(btn,btn.text())  # 버튼 눌렀을때 이벤트 만들기 
 
         self.setWindowTitle("계산기")
         self.show()
+
     def click(self,btn,txt):
         btn.clicked.connect(lambda : self.func(txt))
-        
     def func(self,txt):
-        if 48<=ord(txt)<=57:
+        if txt == "00":
+            self.le.setText(self.le.text()+txt)
+        elif 48<=ord(txt)<=57:
             self.le.setText(self.le.text()+txt)
         elif txt == "=":
             self.lb.setText(str(eval(self.lb.text()+self.le.text())))
@@ -38,9 +39,8 @@ class MyApp(QWidget):
         else:
             self.lb.setText(self.le.text()+txt)
             self.le.setText("")
-
     def keyPressEvent(self,e):
-        if e.key() == 16777216:
+        if e.key() == 16777216:     #esc 눌렀을때 초기화
             self.le.setText("")
             self.lb.setText("")
     #     print("키보드가 눌릴때")
