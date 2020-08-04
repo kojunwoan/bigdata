@@ -2,6 +2,7 @@ $Recycle.Bin
 $WINDOWS.~BT
 $Windows.~WS
 bootTel.dat
+Config.Msi
 Documents and Settings
 ESD
 hiberfil.sys

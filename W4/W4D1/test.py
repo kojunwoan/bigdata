@@ -150,18 +150,18 @@ but, I’m not gonna cry yeah
 떠나간 그대의 목소릴 떠올리네
 나 쓰러질 때까지 널 위해 춤을 줘
 '''                                                                         # 노래 가사를 변수로 지정하여
-with open("./W4D1/rain.txt", 'w', encoding='utf-8') as file0:               
+with open("./W4/W4D1/rain.txt", 'w', encoding='utf-8') as file0:               
     file0.write(ggang)                                                      # 파일에 쓴다.
 
 # 16.
 # 	rain.txt 에서 4글자 단어는 모두 몇개인가? 
-with open("./W4D1/rain.txt",'r', encoding='utf-8') as file1:                #파일을 읽기전용으로 불러와서
+with open("./W4/W4D1/rain.txt",'r', encoding='utf-8') as file1:                #파일을 읽기전용으로 불러와서
     print(len([word for word in file1.read().split() if len(word) == 4]))   #파일을 띄어쓰기 단위로 끊어서 단어를 만든후, 이 단어의 길이가 4일경우 배열에 담는다. 나중에 이 배열의 크기를 출력하면 길이가 4인 단어의 갯수가 출력
 
 # 17.
 # 	사용자가 입력한 디렉토리의 파일과 디릭토리 목록을 dir.txt 파일에 저장하세요
 import os 
-with open("./W4D1/dir.txt", 'w', encoding='utf-8') as file2:
+with open("./W4/W4D1/dir.txt", 'w', encoding='utf-8') as file2:
     for name in os.listdir(input("디렉토리를 입력하시오 : ")):                  #사용자에게 디렉토리명을 입력받아서, 해당디렉토리의 디렉토리들과 파일의 이름을
         file2.write(name+"\n")                                                #파일에 쓴다.
 
@@ -175,7 +175,7 @@ with open("./W4D1/dir.txt", 'w', encoding='utf-8') as file2:
 # 	35
 # 	41
 from random import randint
-with open('./W4D1/lotto.txt', 'w', encoding='utf-8') as file3:
+with open('./W4/W4D1/lotto.txt', 'w', encoding='utf-8') as file3:
     l = set()                                                           #set을 만들어서
     while len(l)<6:                                                     #set의 길이가 6이 될때까지
         l.add(randint(1,45))                                            #숫자를 담으면 중복이 없는 6개의 숫자를 받을 수 있다.
@@ -185,14 +185,14 @@ with open('./W4D1/lotto.txt', 'w', encoding='utf-8') as file3:
 
 # 19.
 # 	랜덤하게 소문자 3자를 생성해서  randomchar.txt 파일에 저장하세요 
-with open('./W4D1/radomchar.txt', 'w', encoding='utf-8') as file4:
+with open('./W4/W4D1/radomchar.txt', 'w', encoding='utf-8') as file4:
     for i in range(3):                                                  #3번 반복
         file4.write(chr(randint(97,122)))                               #랜덤 소문자를 만들어서 파일에 쓴다.
 
 # 20.  다음 내용을 stock.csv 로 저장하세요 
 Stock = [['종목번호','회사명','현재주가'],['035720','카카오',326500],['005930','삼성전자',55600],['047820','초록뱀',1590]] 
-with open('./W4D1/stock.csv', 'w') as file5:
+with open('./W4/W4D1/stock.csv', 'w') as file5:
     for i in Stock:
         for j in i:
-            file5.write(str(j)+',')
+            file5.write(j,sep=",")
         file5.write("\n")

@@ -17,10 +17,12 @@ class MyApp(QWidget):
         #라벨 2개
         self.labelID = QLabel("ID",self)
         self.labelPW = QLabel("PW",self)
+
         #폰트 크게
         font1 = self.labelID.font()
         font1.setPointSize(30)
         font1.setBold(True)
+        
         self.labelID.setFont(font1)
         self.labelPW.setFont(font1)
 
@@ -42,6 +44,10 @@ class MyApp(QWidget):
         self.btnreg = QPushButton("헬조선 가입",self)
         self.btnreg.setGeometry(550,400,120,50)
         self.btnreg.clicked.connect(self.register)
+        
+        self.btnreg2 = QPushButton("헬조선 가입2",self)
+        self.btnreg2.setGeometry(550,450,120,50)
+        self.btnreg2.clicked.connect(self.register2)
 
         btnclose = QPushButton("X",self)
         btnclose.setGeometry(660,10,30,30)
@@ -105,6 +111,9 @@ class MyApp(QWidget):
     def register(self):
         self.nw = MyRegisterWindow(self)
         self.nw.show()
+    def register2(self):
+        self.nw = MyRegisterWindow2(self)
+        self.nw.show()
 
     def close(self):
         if QMessageBox.question(self, "메세지", "정말 나갈려구?", QMessageBox.Yes| QMessageBox.No, QMessageBox.No) == QMessageBox.Yes:
@@ -137,7 +146,6 @@ class MyRegisterWindow(QMainWindow):
 
         self.submit.setGeometry(50,200,250,50)
 
-        self.setCentralWidget(MyWidget())
     def regdit(self):
         connect2 = cx_Oracle.connect("scott","tiger","192.168.0.68:1521/orcl")
         cur2 = connect2.cursor()
@@ -148,49 +156,54 @@ class MyRegisterWindow(QMainWindow):
         QMessageBox.question(self,"가입 끝~~","가입 완료", QMessageBox.Yes, QMessageBox.Yes)
         self.close()
 
-class MyWidget(QWidget):
-    def __init__(slef):
-        super().__init__()
+class MyRegisterWindow2(QMainWindow):
+    def __init__(self,parent):
+        super().__init__(parent)
+        self.setCentralWidget(MyWidget(self))
         
-        '''
-        self.hboxID = QHBoxLayout()
-        self.hboxPW = QHBoxLayout()
-        self.hboxNa = QHBoxLayout()
-        self.hboxGr = QHBoxLayout()
-        self.hboxBt = QHBoxLayout()
 
-        self.hboxID.addStretch(1)
-        self.hboxID.addWidget(self.lbrgID)
-        self.hboxID.addWidget(self.lergID)
-        self.hboxID.addStretch(1)
+class MyWidget(QWidget):
+    def __init__(self,parent):
+        super().__init__(parent)
+        self.setWindowTitle("헬조선 가입")
+        self.setGeometry(100,100,350,300)
+        self.rglbID = QLabel("ID",self)
+        self.rglbPW = QLabel("PW",self)
+        self.rglbNa = QLabel("Name",self)
 
-        self.hboxPW.addStretch(1)
-        self.hboxPW.addWidget(self.lbrgPW)
-        self.hboxPW.addWidget(self.lergPW)
-        self.hboxPW.addStretch(1)
+        self.rgleID = QLineEdit(self)
+        self.rglePW = QLineEdit(self)
+        self.rgleNa = QLineEdit(self)
 
-        self.hboxNa.addStretch(1)
-        self.hboxNa.addWidget(self.lbrgNa)
-        self.hboxNa.addWidget(self.lergNa)
-        self.hboxNa.addStretch(1)
+        self.submit = QPushButton("가입하기",self)
+        self.submit.clicked.connect(self.regdit)
 
-        self.hboxGr.addStretch(1)
-        self.hboxGr.addWidget(self.lbrgGr)
-        self.hboxGr.addWidget(self.lergGr)
-        self.hboxGr.addStretch(1)
+        self.vboxlb = QVBoxLayout()
+        self.vboxlb.addWidget(self.rglbID)
+        self.vboxlb.addWidget(self.rglbPW)
+        self.vboxlb.addWidget(self.rglbNa)
 
-        self.hboxBt.addStretch(1)
-        self.hboxBt.addWidget(self.submit)
-        self.hboxBt.addStretch(1)
+        self.vboxle = QVBoxLayout()
+        self.vboxle.addWidget(self.rgleID)
+        self.vboxle.addWidget(self.rglePW)
+        self.vboxle.addWidget(self.rgleNa)
+
+        self.hboxtxt = QHBoxLayout()
+        self.hboxtxt.addLayout(self.vboxlb)
+        self.hboxtxt.addLayout(self.vboxle)
 
         vbox = QVBoxLayout()
-        vbox.addLayout(self.hboxID)
-        vbox.addLayout(self.hboxPW)
-        vbox.addLayout(self.hboxNa)
-        vbox.addLayout(self.hboxGr)
-        vbox.addLayout(self.hboxBt)
+        vbox.addLayout(self.hboxtxt)
+        vbox.addWidget(self.submit)
         self.setLayout(vbox)
-        '''
+
+    def regdit(self):
+        connect2 = cx_Oracle.connect("scott","tiger","192.168.0.68:1521/orcl")
+        connect2.cursor().execute("insert into member values (:id, :pw, :name, 1)",[self.rgleID.text(),self.rglePW.text(),self.rgleNa.text()])
+        connect2.commit()
+        connect2.close()
+        QMessageBox.question(self,"가입 끝~~","가입 완료", QMessageBox.Yes, QMessageBox.Yes)
+        self.close()
 
 if __name__=="__main__":
     app = QApplication(sys.argv)

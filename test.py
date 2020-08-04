@@ -1,6 +1,16 @@
-unit = [50000,10000,5000,1000,500,100,50,10,1]  #환전시 참고할 돈의 단위이다.
-m = int(input("입력 : "))                       #돈을 m에 입력 받고
-for u in unit:                                  #환전 금액이 높은 순으로 반복문을 실행한다.
-    a, m = divmod(m,u)                          #입력받은 금액을 환전단위로 나누어서 몫은 해당 a라고 하고, 나머지는 다음 단위 환전을 위해 다시 m에 넣는다.
-    if a:
-        print(str(u)+"원\t:",a,"개")            #직전에 저장한 a는 해당 단위의 갯수이기 때문에 출력.
+import sys
+from PyQt5 import *
+from PyQt5.QtWidgets import *
+
+
+class MyWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setGeometry(0,0,1280,720)
+        self.show()
+
+
+if __name__ =="__main__":
+    app = QApplication(sys.argv)
+    win = MyWindow()
+    sys.exit(app.exec_())
