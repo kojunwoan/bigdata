@@ -13,7 +13,7 @@ clients = []
 nicknames = []
 
 #접속중인 모든 사용자들에게 메세지 전달
-def boradcast(msg):
+def broadcast(msg):
     for client in clients:
         client.send(msg)
 
@@ -29,13 +29,14 @@ def handler(client):
             print(msg.decode('utf-8'))
         except:
             #제거하고 클라이언트 닫기
-            index = client.index(clients)
+            index = clients.index(client)
             #예외 발생한 클라이언트만 리스트에서 제거
             clients.remove(client)
             client.close()
             nickname = nicknames[index]
-            broadcast("{}떠남!!"%nickname.encode('utf-8'))
+            broadcast("{}떠남!!".format(nickname).encode('utf-8'))
             nicknames.remove(nickname)
+            break
 
 def receive():
     while True:
@@ -44,9 +45,9 @@ def receive():
         clients.append(connectionSock)
         
         #nickname 요청하기
-        connectionSock.send("NickName을 지정하시오.".encode('utf-8'))
-        nickname = connectionSock.recv(1024)
-        nicknames.append(nickname.decode('uft-8'))
+        connectionSock.send("NICK".encode('utf-8'))
+        nickname = connectionSock.recv(1024).decode('utf-8')
+        nicknames.append(nickname)
 
         #접속자 소개해주기
         connectionSock.send("서버에 접속되었습니다. 환영합니다.".encode('utf-8'))
@@ -56,5 +57,3 @@ def receive():
         Thread(target=handler,args=(connectionSock,)).start()
 
 Thread(target=receive).start()
-
-boradcast
