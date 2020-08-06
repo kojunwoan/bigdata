@@ -42,7 +42,7 @@ class MyApp(QWidget):
         cy = self.character.y()
         y = 0
         for x in range(2,40,2):
-            y = -x**2 +4*x -2
+            y = -x**2 +2*x
             self.character.move(cx+x,cy+y)
             time.sleep(0.03)
 
