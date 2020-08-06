@@ -30,7 +30,7 @@ class MyApp(QWidget):
         [leftlayoutL[2].addWidget(val) for val in self.hboxL]
         #그룹4---------------------------------------
         btnL = [QPushButton(n,self) for n in ["새로만들기","저장"]]
-        # btnL[0].clicked.connect(self.new_img)         새로만들기 때려쳤음
+        btnL[0].clicked.connect(self.new_img)
         btnL[1].clicked.connect(self.save_img)
         [leftlayoutL[3].addWidget(btn) for btn in btnL]
         #좌측묶기---------------------------------------
@@ -63,13 +63,22 @@ class MyApp(QWidget):
         else:
             self.brushcolor = color
             self.hboxL[1].setStyleSheet("Background-color : {}".format(color.name()))
+    def new_img(self):
+        if self.items:
+            msg = QMessageBox.question(self,"그림판","변경 내용을 저장하시겠습니까?",QMessageBox.Yes|QMessageBox.No|QMessageBox.Cancel,QMessageBox.Yes)
+            if msg == QMessageBox.Cancel:
+                return
+            elif msg == QMessageBox.Yes:
+                self.save_img()
+            self.items = []
+            self.view.scene.clear()
+
     def save_img(self):
         fname = QFileDialog.getSaveFileName(self,"어디다가 저장하니??","./")
         if fname[0]:
-            if fname[0].split('/')[-1].find('.') == -1:
+            if fname[0].find('.') == -1:
                 fname = list(fname)
                 fname[0]+=".png"
-                fname = tuple(fname)
             QPixmap(self.view.grab(self.view.sceneRect().toRect())).save(fname[0])
 
 class CGView(QGraphicsView):
@@ -88,6 +97,13 @@ class CGView(QGraphicsView):
         if e.button()==Qt.LeftButton:
             self.start = e.pos()
             self.end = e.pos()
+            if len(self.parent().items):     #드레그중 일어난 이벤트로 인해 생성된 선 제거
+                self.scene.removeItem(self.parent().items[-1])
+                del(self.parent().items[-1])
+            if self.parent().drawType == 4:
+                rect = QRectF(e.pos().x()-self.parent().gridL[1].currentIndex(),e.pos().y()-self.parent().gridL[1].currentIndex(),self.parent().gridL[1].currentIndex()*2,self.parent().gridL[1].currentIndex()*2)
+                self.parent().items.append(self.scene.addRect(rect,QPen(Qt.black,5),QBrush(Qt.white)))
+                self.scene.addRect(rect,QPen(Qt.white,0),QBrush(Qt.white))
     
     def mouseMoveEvent(self,e):
         if len(self.parent().items):     #드레그중 일어난 이벤트로 인해 생성된 선 제거
@@ -97,7 +113,7 @@ class CGView(QGraphicsView):
         pen = QPen(self.parent().pencolor,self.parent().gridL[1].currentIndex())
         line = QLineF(self.start.x(),self.start.y(),self.end.x(),self.end.y())
         brush = QBrush(self.parent().brushcolor)
-        rect = QRectF(self.start,self.end)
+        rect = QRectF(min(self.start.x(),self.end.x()),min(self.start.y(),self.end.y()),abs(self.start.x()-self.end.x()),abs(self.start.y()-self.end.y()))
         if self.parent().drawType == 0:
             self.parent().items.append(self.scene.addLine(line, pen))
         elif self.parent().drawType == 1:
@@ -108,17 +124,16 @@ class CGView(QGraphicsView):
         elif self.parent().drawType == 3:
             self.parent().items.append(self.scene.addEllipse(rect,pen,brush))
         elif self.parent().drawType == 4:
-            print(e.pos(), e.pos().x(), e.pos().y())
-            # self.parent().items.append(self.scene.addRect(QRectF(),pen,QBrush(QColor(0,0,0))))
-            self.scene.addLine(line, QPen(QColor(255,255,255),self.parent().gridL[1].currentIndex()))
-            self.start = e.pos()
+            rect = QRectF(e.pos().x()-self.parent().gridL[1].currentIndex(),e.pos().y()-self.parent().gridL[1].currentIndex(),self.parent().gridL[1].currentIndex()*2,self.parent().gridL[1].currentIndex()*2)
+            self.parent().items.append(self.scene.addRect(rect,QPen(Qt.black,5),QBrush(Qt.white)))
+            self.scene.addRect(rect,QPen(Qt.white,0),QBrush(Qt.white))
 
     def mouseReleaseEvent(self,e):
         self.end = e.pos()
         pen = QPen(self.parent().pencolor,self.parent().gridL[1].currentIndex())
         line = QLineF(self.start.x(),self.start.y(),self.end.x(),self.end.y())
         brush = QBrush(self.parent().brushcolor)
-        rect = QRectF(self.start,self.end)
+        rect = QRectF(min(self.start.x(),self.end.x()),min(self.start.y(),self.end.y()),abs(self.start.x()-self.end.x()),abs(self.start.y()-self.end.y()))
         if self.parent().drawType == 0:
             self.scene.addLine(line,pen)
         elif self.parent().drawType == 1:
