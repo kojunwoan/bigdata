@@ -1,6 +1,7 @@
 import pygame
 from random import randint
-
+def pythagoras(x1,y1,x2,y2):
+    return math.dist((x1,y1),(x2,y2))
 pygame.init()
 
 screen_width = 800
@@ -52,9 +53,9 @@ while isRunning:
     else:
         screen.blit(gogun[2],(50,gy))
     if randint(1,50) == 1:
-        gold.append([600,randint(100,400)])
+        gold.append([800,randint(1,5)*50+50])
     if randint(1,50) == 1:
-        silver.append(randint(100,400))
+        silver.append([800,randint(1,5)*50+50])
     for gol in gold:
         screen.blit(goldimg,(gol[0],gol[1]))
         gol[0] -= 2
@@ -62,8 +63,11 @@ while isRunning:
             gold.remove(gol)
         print(gold)
     for sil in silver:
-        screen.blit(silverimg,(600,sil))
-        sil -= 2
+        screen.blit(silverimg,(sil[0],sil[1]))
+        sil[0] -= 2
+        if sil[0] < -50:
+            silver.remove(sil)
+        print(silver)
     pygame.display.update()
 
 pygame.quit()
