@@ -18,7 +18,8 @@ for i in m:
 print()
 
 n = [[100,50,30,20],[200,100,1],[900,1000,20,20,30,40,50],[50,70,90]]
-
+k = [10,10]
+n.append(k)
 for i in n:
     for j in i:
         print(j,end="\t")

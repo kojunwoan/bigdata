@@ -10,16 +10,16 @@ class MyApp(QWidget):
         gbL = [QGroupBox(i) for i in ["타입","Pen Setting","뷰 설정","File"]]            
         leftlayoutL = [QVBoxLayout(),QGridLayout(),QHBoxLayout(),QVBoxLayout()]
         #그룹1---------------------------------------
-        self.radio = [QRadioButton(i,self) for i in ["직선","사각형","곡선","타원","지우개"]]
-        [leftlayoutL[0].addWidget(r) for r in self.radio]
-        self.radio[0].setChecked(True)
-        self.drawType = 0
-        [self.radioBtnClicked(r,i) for i,r in enumerate(self.radio)]    #라디오버튼 체크시 drawType 변경
+        self.radio = [QRadioButton(i,self) for i in ["직선","사각형","곡선","타원","지우개"]]       #라디오버튼 5개를 만들어서 self.radio리스트에 넣어둔다
+        [leftlayoutL[0].addWidget(r) for r in self.radio]                                       #self.radio리스트에 있는 라디오버튼들 레이아웃에 추가한다.
+        self.radio[0].setChecked(True)                                                          #라디오버튼의 기본값을 0번으로 해놓는다.
+        self.drawType = 0                                                                       #라디오버튼의 인덱스값을 드로우타입으로 해놓는다.
+        [self.radioBtnClicked(r,i) for i,r in enumerate(self.radio)]                            #라디오버튼 체크시 drawType 변경
         #그룹2---------------------------------------
-        self.gridL = [QLabel("선 굵기"),QComboBox(),QLabel("선색"),QPushButton()]
-        [self.gridL[1].addItem(str(i)) for i in range(1,21)]
-        self.pencolor = QColor(0,0,0)
-        self.gridL[3].setStyleSheet("Background-color : rgb(0,0,0)")
+        self.gridL = [QLabel("선 굵기"),QComboBox(),QLabel("선색"),QPushButton()]               #두번쨰 그룹에 넣을 객체들을 리스트에 넣어둔다.
+        [self.gridL[1].addItem(str(i)) for i in range(1,21)]                                    #combobox에 1~20까지의 값을 추가한다.
+        self.pencolor = QColor(0,0,0)                                                           #펜컬러객체를 만들어서 기본 색을 검정으로 지정해놓는다.
+        self.gridL[3].setStyleSheet("Background-color : rgb(0,0,0)")                            #
         self.gridL[3].clicked.connect(self.selectColorDlg)
         [leftlayoutL[1].addWidget(self.gridL[i*2+j],i,j) for i in range(2) for j in range(2)]
         #그룹3---------------------------------------
@@ -142,6 +142,10 @@ class CGView(QGraphicsView):
             self.parent().items.append(self.scene.addLine(line, pen))
         elif self.parent().drawType == 3:
             self.scene.addEllipse(rect,pen,brush)
+        elif self.parent().drawType == 4:
+            if len(self.parent().items):     #드레그중 일어난 이벤트로 인해 생성된 선 제거
+                self.scene.removeItem(self.parent().items[-1])
+                del(self.parent().items[-1])
 
 if __name__=="__main__":
     app = QApplication(sys.argv)
