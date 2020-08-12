@@ -6,15 +6,15 @@ def pythagoras(x1,y1,x2,y2):
 
 pygame.init()
 
-pygame.mixer.music.load(r"e:\dev\python_workspace\sounds\backsound.mp3")
+pygame.mixer.music.load(r"E:\dev\python_workspace\sounds\backsound.mp3")
 pygame.mixer.music.set_volume(0.5) # 1~0.1
 pygame.mixer.music.play(1)
 
-fsound = pygame.mixer.Sound(r"e:\dev\python_workspace\sounds\fire.wav")
+fsound = pygame.mixer.Sound(r"E:\dev\python_workspace\sounds\fire.wav")
 fsound.set_volume(0.5) # 1~0.1
-ssound = pygame.mixer.Sound(r"e:\dev\python_workspace\sounds\scream.wav")
+ssound = pygame.mixer.Sound(r"E:\dev\python_workspace\sounds\scream.wav")
 ssound.set_volume(0.5) # 1~0.1
-rsound = pygame.mixer.Sound(r"e:\dev\python_workspace\sounds\reload.wav")
+rsound = pygame.mixer.Sound(r"E:\dev\python_workspace\sounds\reload.wav")
 rsound.set_volume(0.5) # 1~0.1
 
 screen_width = 1280
@@ -23,8 +23,8 @@ screen_height = 720
 screen = pygame.display.set_mode((screen_width,screen_height))
 
 pygame.display.set_caption("hunt")
-bg1 = pygame.image.load(r'e:\dev\python_workspace\img\bg.jpg')
-bg2 = pygame.image.load(r'e:\dev\python_workspace\img\bg.jpg')
+bg1 = pygame.image.load(r'E:\dev\python_workspace\img\bg.jpg')
+bg2 = pygame.image.load(r'E:\dev\python_workspace\img\bg.jpg')
 bg1x = 0
 bg2x = 1404
 rw = 75
