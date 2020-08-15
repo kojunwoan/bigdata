@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>select2.html</title>
+    <script>
+        function printWhere(){
+//            if(document.getElementById("where").value=="맥도날드"){
+//            }
+            switch(document.frm.where.selectedIndex){
+                case 0:
+                    location.href="https://www.mcdonalds.co.kr";
+                    break;
+                case 1:
+                    location.href="https://www.momstouch.co.kr";
+                    break;
+                case 2:
+                    location.href="http://www.lotteria.com";
+                    break;
+                case 3:
+                    location.href="https://www.burgerking.co.kr";
+                    break;
+                case 4:
+                    location.href="https://www.kfckorea.com";
+                    break;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>오늘은 뭐먹지?</h1>
+    <form action="" name="frm">
+        <select name="where" id="" onchange="printWhere();">
+            <option value="맥도날드">맥도날드</option>
+            <option value="맘스터치">맘스터치</option>
+            <option value="롯데리아">롯데리아</option>
+            <option value="버거킹">버거킹</option>
+            <option value="KFC">KFC</option>
+        </select></form>
+</body>
+</html>

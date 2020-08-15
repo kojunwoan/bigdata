@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>iamge.html</title>
+    <style>
+        img {
+            width: 500px;
+            height: auto;
+        }
+    </style>
+    <script>
+        function changeImg(){
+            document.getElementById("img1").src="../images/image2.jpg"
+        }
+        function changeImg2(){
+            document.getElementById("img1").src="../images/image1.jpg"
+        }
+    </script>
+</head>
+<body>
+    <img id="img1" src="../images/image1.jpg" alt="" onmouseover="changeImg();" onmouseout="changeImg2();">
+</body>
+</html>

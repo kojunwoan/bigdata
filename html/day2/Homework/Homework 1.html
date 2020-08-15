@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homework 1_고준완</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+        }
+        td {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <caption><b>회원가입</b></caption>
+        <tr>
+            <th>ID</th>
+            <td><input type="text" name="id" id="user_id"></td>
+        </tr>        
+        <tr>
+            <th>PW</th>
+            <td><input type="password" name="pw" id="user_pw"></td>
+        </tr>
+        <tr>
+            <th>이름</th>
+            <td><input type="text" name="name" id="user_name"></td>
+        </tr>
+        <tr>
+            <th>성별</th>
+            <td>
+            <input type="radio" name="gender" id="male">남
+            <input type="radio" name="gender" id="female">여
+            </td>
+        </tr>
+        <tr>
+            <th>생년월일</th>
+            <td><input type="date" name="생년월일" id="birth"></td>
+        </tr>
+        <tr>
+            <th>취미</th>
+            <td>
+                <input type="checkbox" name="hobby1" id="hobby1">등산
+                <input type="checkbox" name="hobby2" id="hobby2">독서
+                <input type="checkbox" name="hobby3" id="hobby3">낚시
+                <input type="checkbox" name="hobby4" id="hobby4">영화
+            </td>
+        </tr>
+        <tr>
+            <th>자기소개</th>
+            <td><textarea name="selfintro" id="introduce" cols="30" rows="10"></textarea></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="가입">
+                <input type="reset" value="취소">    
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

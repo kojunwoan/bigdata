@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>lotto.html</title>
+    <script>
+        function getLotto() {
+            var m = new Array(45);
+            for (var i = 0; i<45;i++)
+                m[i] = i+1;
+            
+            for (var i = 0; i<1000;i++){
+                var temp=0;
+                var a = Math.floor(Math.random()*45);
+                var b = Math.floor(Math.random()*45);
+                
+                temp = m[a];
+                m[a] = m[b];
+                m[b] = temp;
+            }
+            
+            for (var i = 1; i<=6 ; i++)
+                document.getElementById("img"+i).src="../images/lotto/ball"+m[i]+".png";
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <img src="../images/lotto/q.jpg" alt="" id="img1">
+        <img src="../images/lotto/q.jpg" alt="" id="img2">
+        <img src="../images/lotto/q.jpg" alt="" id="img3">
+        <img src="../images/lotto/q.jpg" alt="" id="img4">
+        <img src="../images/lotto/q.jpg" alt="" id="img5">
+        <img src="../images/lotto/q.jpg" alt="" id="img6">
+        <input type="button" value="번호추첨" onclick="getLotto();">
+    </div>
+</body>
+</html>

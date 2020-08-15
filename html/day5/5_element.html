@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>element.html</title>
+    <script>
+        function cal(){
+            // id가 txt1인 엘리먼트(태그)를 자바스크립트 객체로 가져오기
+            var t = document.getElementById("txt1");
+            console.log(t);
+            console.log(t.value);
+            t.value = "나 집에 갈래";
+            console.log(t.value);
+            console.dir(t);
+        }
+    </script>
+</head>
+<body>
+    <input type="text" name="" id="txt1" value="기본값">
+    <input type="button" value="전송" onclick="cal();">
+</body>
+</html>

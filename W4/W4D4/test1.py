@@ -15,7 +15,7 @@ class Car:
         print(what, "냄새를 맡는중")
     def talk(self):
         print("혼자 중얼중얼 대화중입니다.")
-    def __add__(self,otherCar): #연산자+(add)를 오버로딩
+    def (self,otherCar): #연산자+(add)를 오버로딩
         print("충돌났네요 ㅠㅜ")
     def __sub__(self,otherCar):
         print("왜 빼는거지...")

@@ -1,0 +1,58 @@
+@charset "UTF-8";
+    
+        #container{
+            background: red;
+            width: 1130px;
+            margin: auto;
+/*            margin: auto; -> 정중앙 배치*/
+        }
+        #nav{
+            background: skyblue;
+        }
+        #header{
+            background: yellow;
+            color: white;
+            height: 200px;
+        }
+        #sidebar1{
+            background: green;
+            width: 200px;
+            float: left;
+        }
+        #contents{
+            background: blue;
+            width: 730px;
+            float: left;
+        }
+        #sidebar2{
+            background: purple;
+            width: 200px;
+            float: right;
+        }
+        #footer{
+            background: silver;
+            height: 200px;
+            clear: both;
+/*            clear: both; -> float 효과 없앰*/
+        }
+        .button{
+            text-decoration: none;
+/*            text-decoration: none; -> 텍스트 장식 없음*/
+            text-align: center;
+            font-size: 14px;
+            font-family: "나눔고딕";
+            padding: 10px 20px;
+            border: 1px solid #f8e098;
+            color: chocolate;
+        }
+/*        마우스오버시 배경색을 변경*/
+        .button:hover{
+            background: #f47c20;
+        }
+/*        마우스 클릭시 효과*/
+        .button:active{
+            background: red;
+            color: blue;
+            position: relative;
+            top: 2px;
+        }

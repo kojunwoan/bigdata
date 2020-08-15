@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>cum.html</title>
+    <script>
+        function cal() {
+            var s = parseInt(prompt("누적할 값: "));
+            //자바스크립트에서 +연산이 오버라이드 될 수 있음
+            //+ : 연결/산술 연산자
+            var sum;
+            for(var i = 1, sum = 0; i <= s; i++) sum = sum + i;
+            console.log("1부터 " + s + "까지 합은 " + sum);
+            console.log((s+1)*s/2);
+        }
+    </script>
+</head>
+<body>
+    <input type="button" value="계산" onclick="cal();">
+</body>
+</html>

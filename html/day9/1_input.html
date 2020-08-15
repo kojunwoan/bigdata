@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>input.html</title>
+    <script>
+        //저장 버튼을 누를떄 호출되는 함수
+        //현재 input:text 값을 콘솔에 출력
+        
+        //전역변수 배열 선언
+        var msg = [];
+        
+        function saveData(){
+            var txt = document.getElementById("txt1");
+            msg.push(txt.value);
+            txt.value='';
+            txt.focus;
+        }
+        function printData(){
+            var data = "";
+            for (var i = 0 ; i < msg.length ; i++){
+                data += "<h1>"+msg[i]+"</h1>";
+            }
+            document.getElementById("txt2").innerHTML = data;
+            
+        }
+    </script>
+</head>
+<body>
+    <input type="text" name="" id="txt1" onkeydown="javascript:{if(event.keyCode==13){saveData();}}">
+    <input type="button" value="저장" onclick="saveData();">
+    <input type="button" value="출력" onclick="printData();">
+    <p id="txt2">여기에 출력</p>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>hw02_구구단_고준완</title>
+    <script>
+        function Multiclication(){
+            var i = parseInt(document.getElementById("number1").value);
+            for(var j=1; j<=9; j++)
+                document.write(i + " * " + j + " = " + i*j + "<br>");
+        }
+        function Multiclication2(){
+            var i = parseInt(document.getElementById("number1").value);
+            var txt = "";
+            for(var j=1; j<=9; j++)
+                 txt = (txt + i + " * " + j + " = " + i*j + "<br>");
+            document.getElementById("p1").innerHTML = txt;
+        }
+        function NumberCheck(){
+            var i = parseInt(document.getElementById("number1").value);
+            if(i>=1 && i<=9)
+                Multiclication2();
+            else 
+                alert("1~9까지의 숫자만 입력 가능합니다.");
+        }
+    </script>
+</head>
+<body>
+    <input type="number" name="" id="number1" min="1" max="9" placeholder="1~9" autofocus onkeydown="javascript:if(event.keyCode==13){NumberCheck();}">
+    <input type="button" value="단" onclick="NumberCheck();">
+    <p id="p1"></p>
+</body>
+</html>

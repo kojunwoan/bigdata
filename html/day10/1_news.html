@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>news.html</title>
+    <script>
+        var news = ["1. 메모리 용량 1000배↑",
+                   "2. 코로나 종식",
+                   "3. 대학교 졸업자 전원 취업",
+                   "4. 대박로또 번호 제공"];
+        
+        
+        // 이 함수를 1초에 한번씩 호출
+        window.setInterval(show,1000);
+        var counter = 0;
+        
+        function show() {
+            var m = document.getElementById("m1");
+            console.log(m);
+            m.innerHTML = "<h1>"+news[counter++]+"</h1>";
+            if (counter == news.length)
+                counter = 0;
+        }
+    </script>
+</head>
+<body>
+    <div id="m1"></div>
+</body>
+</html>

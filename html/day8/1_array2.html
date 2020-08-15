@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>array2.html</title>
+    <script>
+        var m = new Array(45);
+        for (var i=0; i<45; i++){
+            m[i] = i+1;
+            console.log(m[i]);
+        }
+        for (var i=0;i<1000;i++){
+            var temp = -1;
+        
+            var a = Math.floor(Math.random()*45);
+            var b = Math.floor(Math.random()*45);
+        
+            temp = m[a];
+            m[a] = m[b];
+            m[b] = temp;
+        }
+        //로또 ㅋ
+        for (var i=0; i<6; i++){
+            console.log("m["+i+"] = "+m[i]+"\t");
+        }
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

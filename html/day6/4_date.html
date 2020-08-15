@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>date.html</title>
+    <script>
+        function rightNow(){
+        var now = new Date();
+            document.write(now.getFullYear()+"년 "+eval(now.getMonth()+1)+"월 "+now.getDate()+"일 "+now.getHours()+"시 "+now.getMinutes()+"분 "+now.getSeconds()+"초 ");
+        }
+/*        //날짜 시간 : date 객체
+        var now = new Date();
+        console.log(now);
+        console.dir(now);
+        console.log(now.getFullYear());
+        console.log(now.getHours());
+        console.log(now.getMinutes());
+        */
+        function rightNow2(){
+            var now = new Date();
+            document.getElementById("div1").innerText = "<h1>hahaha</h1>";
+            document.getElementById("div2").innerHTML = "<h1>hahaha</h1>";
+        }
+    </script>
+</head>
+<body>
+    <input type="button" value="지금시간 출력하기" onclick="rightNow2();">
+    <div id="div1"></div>
+    <div id="div2"></div>
+</body>
+</html>

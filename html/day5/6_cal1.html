@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>cal1.html</title>
+    <script>
+        function cal(){
+            document.getElementById("result").value = 
+                parseInt(document.getElementById("num1").value) + 
+                parseInt(document.getElementById("num2").value);
+        }
+    </script>
+</head>
+<body>
+    <input type="number" name="" id="num1" autofocus>
+    +
+    <input type="number" name="" id="num2" onkeydown="javascript:if(event.keyCode==13){cal();}">
+    <input type="button" value="=" id="" onclick="cal();">
+    <input type="number" name="" id="result">
+</body>
+</html>

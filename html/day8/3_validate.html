@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>validate.html</title>
+    <script>
+        function checkForm(x){
+            var id = x.form[0].value;
+            var passed = x.form[1].value;
+            var repwd = x.form[2].value;
+            var email = x.form[3].value;
+            
+            if(id==''){
+                alert("아이디를 입력하세요.");
+                x.form[0].focus();
+                return;
+            }
+            else if(passed==''){
+                alert("비밀번호를 입력하세요.");
+                x.form[1].focus();
+                return;
+            }
+            else if(repwd==''){
+                alert("비밀번호확인을 입력하세요.");
+                x.form[2].focus();
+                return;
+            }
+            else if(email==''){
+                alert("이메일을 입력하세요.");
+                x.form[3].focus();
+                return;
+            }
+            else if(repwd != passed){
+                alert("비밀번호가 서로 다릅니다.");
+                x.form[1].value='';
+                x.form[2].value='';
+                x.form[1].focus();
+                return;
+            }
+//            else if(email.indexOf("@")==-1){
+//                alert("email 형식이 아닙니다.");
+//                x.form[3].value='';
+//                x.form[3].focus();
+//                return;
+//            }
+            //검사가 끝났다면 양식을 다른곳에 제출
+            x.form.action="4_register.html";
+            x.form.method="get"; //post
+            x.form.submit();
+        }
+    </script>
+</head>
+<body>
+    <form action="">
+        <table>
+            <tr>
+                <td>아이디</td>
+                <td><input type="text" name="userid" id="" placeholder="아이디를 입력하세요."></td>
+            </tr>
+            <tr>
+                <td>비밀번호</td>
+                <td><input type="password" name="userpwd" id=""></td>
+            </tr>
+            <tr>
+                <td>비밀번호확인</td>
+                <td><input type="password" name="userepwd" id=""></td>
+            </tr>
+            <tr>
+                <td>email</td>
+                <td><input type="email" name="useremail" id=""></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="button" value="전송" onclick="checkForm(this);"></td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

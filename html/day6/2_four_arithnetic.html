@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>four_arithmetic.html</title>
+    <script>
+        function cal(){
+            document.getElementById("result").value = (eval(
+            document.getElementById("num1").value+
+            document.getElementById("oper").value+
+            document.getElementById("num2").value));
+        }
+    </script>
+</head>
+<body>
+    <input type="number" name="" id="num1" autofocus>
+    <input type="text" name="" id="oper" size="3">
+    <input type="number" name="" id="num2"  onkeydown="javascript:if(event.keyCode==13){cal();}">
+    <input type="button" value="=" onclick="cal();">
+    <input type="text" name="" id="result">
+</body>
+</html>

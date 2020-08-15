@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>rabbit.html</title>
+    <style>
+        canvas {
+            background: #eee;
+        }
+    </style>
+    <script>
+        //배경음악 객체
+        var bgMusic = new Audio("../sounds/backsound.mp3");
+        
+        //그림 이미지 객체
+        var bg = new Image();
+        bg.src = "../Images/bg.jpg";
+        var rabbit1 = new Image();
+        rabbit1.src = "../Images/rabbit1.png";
+        var rabbit2 = new Image();
+        rabbit2.src = "../Images/rabbit2.png";
+        
+        // 전역변수화 시키기
+        var ctx;
+        // 카운터변수
+        var counter = 0;
+        var rabbitX = 100;
+        var rabbitY = 100;
+        
+        window.onload = function() {
+            var canvas = document.getElementById("myCanvas");
+            ctx = canvas.getContext("2d");
+            //그림그리기
+            // ctx.drawImage(그릴객체,x,y,너비,높이);
+            //ctx.drawImage(bg,0,0,800,600);  //배경
+            
+            //setTimeout -> 한번만, setInterval -> while
+            
+            window.setInterval(drawScreen,20);
+        }
+        function drawScreen() {
+            counter++;
+            //console.log(counter);
+            
+            ctx.drawImage(bg,0,0,950,487);  //배경
+            if (counter%10<5)
+                ctx.drawImage(rabbit1,rabbitX,rabbitY,158*0.5,203*0.5);  //토끼1
+            else
+                ctx.drawImage(rabbit2,rabbitX,rabbitY,158*0.5,203*0.5);  //토끼2
+        }
+        function startMusic(){
+            console.log("배경음악 나오는중~~~~");
+            bgMusic.play();
+        }
+        function stopMusic(){
+            console.log("배경음악 꺼짐~~~~");
+            bgMusic.currentTime=0;
+            bgMusic.pause();
+        }
+    </script>
+</head>
+<body>
+    <canvas id="myCanvas" width="950" height="487"></canvas>
+    <input type="button" value="배경음악on" onclick="startMusic();">
+    <input type="button" value="배경음악off" onclick="stopMusic();">
+</body>
+</html>

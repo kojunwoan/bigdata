@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>select.html</title>
+    <script>
+        function viewResult() {
+            //id가 m1인 객체가져오기
+            if(document.getElementById("m1").checked) {
+                console.log("당신의 선택은 온워드");
+            }
+            else if(document.getElementById("m2").checked) {
+                console.log("당신의 선택은 결백");
+            }
+            else if(document.getElementById("m3").checked) {
+                console.log("당신의 선택은 야구소녀");
+            }
+            else if(document.getElementById("m4").checked) {
+                console.log("당신의 선택은 사라진시간");
+            }
+            else if(document.getElementById("m5").checked) {
+                console.log("당신의 선택은 EYES ON ME : The Movie");
+            }
+            else {
+                console.log("아직 선택하지 않았습니다.");
+            }
+        }
+    </script>
+</head>
+<body>
+<!--    form[name='frm']>input:radio[name='movie']#m$*5+input:button[value="결과보기"]-->
+    <form action="" name="frm">
+        <input type="radio" name="movie" id="m1">온워드
+        <input type="radio" name="movie" id="m2">결백
+        <input type="radio" name="movie" id="m3">야구소녀
+        <input type="radio" name="movie" id="m4">사라진시간
+        <input type="radio" name="movie" id="m5">EYES ON ME : The Movie
+        <input type="button" value="결과보기" onclick="viewResult();">
+    </form>
+</body>
+</html>

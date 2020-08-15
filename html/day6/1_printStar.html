@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script>
+        var i,j,k;
+        function selec(selecter,line,sign){
+            document.getElementById("result").innerHTML= "";
+            var sel = selecter.options[selecter.selectedIndex].value;
+            switch(sel){
+                case "triangle_left":
+                    triangle_left(line,sign);
+                    break;
+                case "triangle_reverse_left":
+                    triangle_reverse_left(line,sign);
+                    break;
+                case "triangle_right":
+                    triangle_right(line,sign);
+                    break;
+                case "triangle_reverse_right":
+                    triangle_reverse_right(line,sign);
+                    break;
+                case "pyramid":
+                    pyramid(line,sign);
+                    break;
+                case "pyramid_reverse":
+                    pyramid_reverse(line,sign);
+                    break;
+                case "isosceles_triangle_left":
+                    isosceles_triangle_left(line,sign);
+                    break;
+                case "isosceles_triangle_right":
+                    isosceles_triangle_right(line,sign);
+                    break;
+                case "diamond":
+                    diamond(line,sign);
+                    break;
+                case "hourglass":
+                    hourglass(line,sign);
+                    break;
+                case "butterfly":
+                    butterfly(line,sign);
+                    break;
+                case "flowing_hourglass":
+                    flowing_hourglass(line,sign);
+                    break;
+                case "sixty":
+                    sixty(line,sign);
+                    break;
+            }
+        }
+        function print_star(row,col,sign){
+            document.getElementById("result").innerHTML= document.getElementById("result").innerHTML + sign.value;
+        }
+        function print_blank(){
+            document.getElementById("result").innerHTML= document.getElementById("result").innerHTML + "&nbsp;";
+        }
+        function print_line(){
+            document.getElementById("result").innerHTML= document.getElementById("result").innerHTML+"<br>";
+        }
+        function triangle_left(line,sign){
+            for(i=1; i<=line.value; i++){
+                for(j=1; j<=i; j++){
+                    print_star(i,j,sign);
+                }
+                print_line();
+            }
+        }
+        function triangle_reverse_left(line,sign){
+            for(i=line.value; i>=1; i--){
+                for(j=1; j<=i; j++){
+                    print_star(i,j,sign);
+                }
+                print_line();
+            }
+        }
+        function triangle_right(line,sign){
+            for(i=1; i<=line.value; i++){
+                for(k=1; k<=line.value-i; k++){
+                    print_blank();
+                }
+                for(j=1; j<=i; j++){
+                    print_star(i,j,sign);
+                }
+                print_line();
+            }
+        }
+        function triangle_reverse_right(line,sign){
+            for(i=line.value; i>=1; i--){
+                for(k=1; k<=line.value-i; k++){
+                    print_blank();
+                }
+                for(j=1; j<=i; j++){
+                    print_star(i,j,sign);
+                }
+                print_line();
+            }
+        }
+        function pyramid(line,sign){
+            for(i=1; i<=line.value; i++){
+                for(k=1; k<=line.value-i; k++){
+                    print_blank();
+                }
+                for(j=1; j<=i*2-1; j++){
+                    print_star(i,j,sign);
+                }
+                print_line();
+            }
+        }
+        function pyramid_reverse(line,sign){
+            for(i=line.value; i>=1; i--){
+                for(k=1; k<=line.value-i; k++){
+                    print_blank();
+                }
+                for(j=1; j<=i*2-1; j++){
+                    print_star(i,j,sign);
+                }
+                print_line();
+            }
+        }
+        function isosceles_triangle_left(line,sign){
+            for(i=1; i<=line.value; i++){
+                for(j=1; j<=i; j++){
+                    print_star(i,j,sign);
+                }
+                print_line();
+            }
+        }
+        function isosceles_triangle_right(line,sign){
+            for(i=line.value; i>=1; i--){
+                for(k=1; k<=line.value-i; k++){
+                    print_blank();
+                }
+                for(j=1; j<=i; j++){
+                    print_star(i,j,sign);
+                }
+                print_line();
+            }
+        }
+        function diamond(line,sign){
+            for(i=line.value; i>=1; i--){
+                for(k=1; k<=line.value-i; k++){
+                    print_blank();
+                }
+                for(j=1; j<=i; j++){
+                    print_star(i,j,sign);
+                }
+                print_line();
+            }
+        }
+        function hourglass(line,sign){
+            for(i=line.value; i>=1; i--){
+                for(k=1; k<=line.value-i; k++){
+                    print_blank();
+                }
+                for(j=1; j<=i; j++){
+                    print_star(i,j,sign);
+                }
+                print_line();
+            }
+        }
+        function butterfly(line,sign){
+            for(i=line.value; i>=1; i--){
+                for(k=1; k<=line.value-i; k++){
+                    print_blank();
+                }
+                for(j=1; j<=i; j++){
+                    print_star(i,j,sign);
+                }
+                print_line();
+            }
+        }
+        function flowing_hourglass(line,sign){
+            for(i=line.value; i>=1; i--){
+                for(k=1; k<=line.value-i; k++){
+                    print_blank();
+                }
+                for(j=1; j<=i; j++){
+                    print_star(i,j,sign);
+                }
+                print_line();
+            }
+        }
+        function sixty(line,sign){
+            for(i=line.value; i>=1; i--){
+                for(k=1; k<=line.value-i; k++){
+                    print_blank();
+                }
+                for(j=1; j<=i; j++){
+                    print_star(i,j,sign);
+                }
+                print_line();
+            }
+        }
+    </script>
+</head>
+<body>
+    형태 : 
+    <select name="select" id="selecter">
+        <option value="triangle_left">삼각형(좌)</option>
+        <option value="triangle_reverse_left">역삼각형(좌)</option>
+        <option value="triangle_right">삼각형(우)</option>
+        <option value="triangle_reverse_right">역삼각형(우)</option>
+        <option value="pyramid">피라미드</option>
+        <option value="pyramid_reverse">역피라미드</option>
+        <option value="isosceles_triangle_left">이등변삼각형(좌)</option>
+        <option value="isosceles_triangle_right">이등변삼각형(우)</option>
+        <option value="diamond">다이아몬드</option>
+        <option value="hourglass">모래시계</option>
+        <option value="butterfly">나비</option>
+        <option value="flowing_hourglass
+">흐르는모래시계</option>
+        <option value="sixty">육망성</option>
+    </select>
+    <br>
+    줄수 : <input type="number" name="" id="line">
+    <br>
+    문자 : <input type="text" name="" id="sign">
+    <br>
+    <input type="button" value="출력" onclick="selec(selecter,line,sign);">
+    <p id="result"></p>
+</body>
+</html>

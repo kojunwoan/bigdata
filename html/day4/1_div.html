@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>div.html</title>
+    <style>
+        img {
+            max-width: 150px;
+            height: auto;
+            float: right;
+/*            left right inherit(부모의 속성을 물려받음) none(안띄움)*/
+        }
+/*        너비300; 높이300; 배경초록;*/
+        #div1 {
+            width: 300px;
+            height: 300px;
+            background: green;
+        }
+        #div2 {
+            width: 300px;
+            height: 300px;
+            background: red;
+            float: right;
+            
+        }
+    </style>
+</head>
+<body>
+    <p>br이 없어도 엔터친 효과가 나는 엘리먼트를 block 요소라 한다.</p>
+<!--    ex)h1 div-->
+    <p>현재 컨텐츠를 감쌀만큼 크기를 차지 : inline 요소</p>
+    <span>출력</span>
+    
+    <div id="div1">
+        <img src="../images/image1.jpg" alt="">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem pariatur quis aspernatur inventore exercitationem nihil laborum obcaecati voluptate numquam sapiente temporibus, adipisci provident quasi eligendi possimus culpa sed doloremque accusamus!
+    </div>
+    <div id="div2">bbb</div>
+</body>
+</html>

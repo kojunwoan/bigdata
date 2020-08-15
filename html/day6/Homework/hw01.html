@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>hw1_고준완</title>
+    <script>
+        function printNow(){
+            var now = new Date();
+            document.getElementById("div1").innerHTML = ("<h3>"+ now.getFullYear()+"년 "+eval(now.getMonth()+1)+"월 "+now.getDate()+"일 "+now.getHours()+"시 "+now.getMinutes()+"분 "+now.getSeconds()+"초 </h3>");
+        }
+        //솔루션 버전
+        // var now = new Date(); //전역변수 사용시 프로그램 읽은 시간
+        function rightNow(){
+            var now = new Date(); //지역변수 사용시 함수 호출 시간
+            var year = now.getFullYear();
+            var month = now.getMonth()+1;
+            var date = now.getDate();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+            var msg = year + "년 " + month + "월 " + date + "일 " + hours + "시 " + minutes + "분 " + seconds + "초 ";
+            document.getElementById("div1").innerHTML = "<h3>"+msg+"</h3>";
+        }
+    </script>
+</head>
+<body>
+    <input type="button" value="지금 시간 출력하기" onclick="printNow();">
+    <input type="button" value="지금 시간 출력하기" onclick="rightNow();">
+    <div id="div1"></div>
+</body>
+</html>

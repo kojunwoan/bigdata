@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>cal.html</title>
+    <link rel="stylesheet" href="../css/cal.css">
+    <script>
+        function inputdata(data){
+            document.getElementById("result").value = document.getElementById("result").value + data;
+        }
+        function run(){
+            document.getElementById("result").value = eval(document.getElementById("result").value);
+        }
+    </script>
+</head>
+<body>
+    <table>
+        <tr>
+            <td colspan="4"><input type="text" name="" id="result"></td>
+        </tr>
+        <tr>
+            <td><input type="button" value="7" id="button" onclick="inputdata(7);"></td>
+            <td><input type="button" value="8" id="button" onclick="inputdata(8);"></td>
+            <td><input type="button" value="9" id="button" onclick="inputdata(9);"></td>
+            <td><input type="button" value="+" id="button" onclick="inputdata('+');"></td>
+        </tr>
+        <tr>
+            <td><input type="button" value="4" id="button" onclick="inputdata(4);"></td>
+            <td><input type="button" value="5" id="button" onclick="inputdata(5);"></td>
+            <td><input type="button" value="6" id="button" onclick="inputdata(6);"></td>
+            <td><input type="button" value="-" id="button" onclick="inputdata('-');"></td>
+        </tr>
+        <tr>
+            <td><input type="button" value="1" id="button" onclick="inputdata(1);"></td>
+            <td><input type="button" value="2" id="button" onclick="inputdata(2);"></td>
+            <td><input type="button" value="3" id="button" onclick="inputdata(3);"></td>
+            <td><input type="button" value="*" id="button" onclick="inputdata('*');"></td>
+        </tr>
+        <tr>
+            <td><input type="button" value="0" id="button" onclick="inputdata(0);"></td>
+            <td><input type="button" value="00" id="button" onclick="inputdata('00');"></td>
+            <td><input type="button" value="=" id="button" onclick="run();"></td>
+            <td><input type="button" value="/" id="button" onclick="inputdata('/');"></td>
+        </tr>
+    </table>
+</body>
+</html>

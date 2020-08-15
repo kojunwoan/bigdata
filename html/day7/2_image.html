@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>image.html</title>
+    <style>
+        img {
+            width: 300px;
+            height: auto;
+        }
+    </style>
+    <script>
+    </script>
+</head>
+<body>
+    <img id="img" src="../images/image1.jpg" alt="">
+    <script>
+        var img = document.getElementById("img");
+        console.dir(img);
+        img.src="../images/image"+ Math.floor(Math.random()*5+1) +".jpg";
+    </script>
+</body>
+</html>

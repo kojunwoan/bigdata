@@ -1,0 +1,36 @@
+@charset "UTF-8";
+body {
+    margin: 0;
+}
+#container {
+    width: 1920px;
+    margin: auto;
+}
+#header img{
+    display: block;
+    margin: 0 auto;
+}
+#main {
+}
+#main_today{
+    position: relative;
+    height: 450px;
+    float: left;
+}
+#main_today_thumbnail{
+    width: 184px;
+    position: absolute;
+    right: 300px;
+    top: 23px;
+    float: right;
+    text-align: center;
+}
+#main_today_thumbnail img{
+    border-top: #eeeeee 2px solid;
+    border-right: #fff 1px solid;
+    border-bottom: #eeeeee 2px solid;
+    border-left: #fff 1px solid;
+}
+#main_today_thumbnail img:hover{
+    border: #4285f4 2px solid;
+}

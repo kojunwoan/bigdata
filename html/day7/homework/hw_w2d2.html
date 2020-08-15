@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Coupang_fishing_고준완</title>
+    <link rel="stylesheet" href="./hw_w2d2.css">
+    <script>    
+        function today(id){
+            var change_img = document.getElementById("today_back");
+            switch(id) {
+                case "thumb1":
+                    change_img.src="./images/background1.jpg";
+                    break;
+                case "thumb2":
+                    change_img.src="./images/background2.jpg";
+                    break;
+                case "thumb3":
+                    change_img.src="./images/background3.jpg";
+                    break;
+                case "thumb4":
+                    change_img.src="./images/background4.jpg";
+                    break;
+                case "thumb5":
+                    change_img.src="./images/background5.jpg";
+                    break;
+                case "thumb6":
+                    change_img.src="./images/background6.jpg";
+                    break;
+            }
+        }
+    </script>
+</head>
+<body>
+<!--    div#container>(div#header>(div#logo>+img)+div#nav)+div#main>(div#main_today>div#main_today_thumbnail)+div#main_contents-->
+    <div id="container">
+        <div id="header">
+            <div id="logo"><img src="./images/coupang_header.png" alt=""></div>
+            <div id="nav"></div>
+        </div>
+        <div id="main">
+            <div id="main_today">
+               <img id="today_back" src="./images/background1.jpg" alt="">
+                <div id="main_today_thumbnail">
+                    <div><img id="thumb1" src="./images/coupang_thumbnail1.jpg" alt="" onmouseover="today(id);"></div>
+                    <div><img id="thumb2" src="./images/coupang_thumbnail2.jpg" alt="" onmouseover="today(id);"></div>
+                    <div><img id="thumb3" src="./images/coupang_thumbnail3.jpg" alt="" onmouseover="today(id);"></div>
+                    <div><img id="thumb4" src="./images/coupang_thumbnail4.jpg" alt="" onmouseover="today(id);"></div>
+                    <div><img id="thumb5" src="./images/coupang_thumbnail5.jpg" alt="" onmouseover="today(id);"></div>
+                    <div><img id="thumb6" src="./images/coupang_thumbnail6.jpg" alt="" onmouseover="today(id);"></div>
+                </div>
+            </div>
+            <div id="main_contents"></div>
+        </div>
+    </div>
+</body>
+</html>

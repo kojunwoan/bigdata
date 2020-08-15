@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>input2.html</title>
+    <script>
+        function prt() {
+            document.getElementById("ulEle").innerHTML += "<li>" + document.getElementById("txt1").value + "</li>";
+            txt.value='';
+            txt.focus;
+        }
+        
+        //solution
+        var msg = [];
+        function prt1() {
+            var txt = document.getElementById("txt1");
+            msg.push(txt.value);
+            console.log(msg);
+            txt.value='';
+            txt.focus;
+            
+            var data = "";
+            for (var i = 0 ; i < msg.length ; i++) {
+                data += "<li>" + msg[i] + "</li>";
+            }
+            
+            var ul = document.getElementById("ulEle");
+            ul.innerHTML=data;
+        }
+    </script>
+</head>
+<body>
+    <h1>점심메뉴</h1>
+    <input type="text" name="" id="txt1" onkeydown="javascript:if(event.keyCode==13)prt1();">
+    <input type="button" value="입력" onclick="prt1();">
+    
+    <div>
+        <ul id="ulEle">
+        </ul>
+    </div>
+</body>
+</html>

@@ -2,7 +2,7 @@
 from socket import *
 from threading import *
 
-ip = '192.168.0.37'
+ip = '192.168.0.29'
 port = 5000
 nickname = "qwerty"
 
