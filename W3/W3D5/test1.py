@@ -15,8 +15,6 @@ for country, capital in countrys.items():
     print(country, capital)
 capital = {country : capital for country, capital in countrys.items()}
 print(capital)
-
-
     
 
 

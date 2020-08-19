@@ -24,7 +24,7 @@ class MyApp(QWidget):
         self.move(0,0)
 
         # 배경 
-        bg_img = QPixmap("E:\dev\python_workspace\img\bg3_1200.jpg")
+        bg_img = QPixmap(r"E:\dev\python_workspace\W7(project)\img\bg3_1200.jpg")
         self.bg = QLabel("bg",self)
         self.bg.resize(1200,700)
         self.bg.setPixmap(bg_img)
@@ -37,32 +37,34 @@ class MyApp(QWidget):
         self.playerList[2].move(377,83)
         self.playerList[3].move(717,300)
 
-        self.imgList = [img.scaled(78, 108, Qt.KeepAspectRatio, Qt.FastTransformation) for img in [QPixmap(r"E:\dev\python_workspace\W7(project)\img\{}.jpg".format(i)) for i in range(9)]]
-
+        # self.imgList = [img.scaled(78, 108, Qt.KeepAspectRatio, Qt.FastTransformation) for img in [QPixmap(r"E:\dev\python_workspace\W7(project)\img\{}.jpg".format(i)) for i in range(9)]]
+        backImg = QPixmap(r"E:\dev\python_workspace\W7(project)\img\0.jpg")
+        # backImg_100 = backImg.scaled(100,139,Qt.KeepAspectRatio, Qt.FastTransformation)
+        self.backImg_78 = backImg.scaled(78,103,Qt.KeepAspectRatio, Qt.FastTransformation)
         self.playerCardList = [[QLabel(self) for i in range(2)] for j in range(4)]
-        [[card.setPixmap(self.imgList[0]) for card in player] for player in self.playerCardList]
-        for card in self.playerCardList[0]:
-            card.setPixmap(self.imgList[0].scaled(100,139,Qt.KeepAspectRatio, Qt.FastTransformation))
+        for player in self.playerCardList:
+            for card in player:
+                card.setPixmap(self.backImg_78)
+                card.setHidden(True)
+        # for card in self.playerCardList[0]:
+        #     card.setPixmap(self.imgList[0].scaled(100,139,Qt.KeepAspectRatio, Qt.FastTransformation))
         self.playerCardList[0][0].move(290,440)
         self.playerCardList[0][1].move(400,440)
-        self.playerCardList[1][0].move(90,300)
-        self.playerCardList[1][1].move(90,190)
-        self.playerCardList[2][0].move(310,50)
-        self.playerCardList[2][1].move(400,50)
-        self.playerCardList[3][0].move(600,300)
-        self.playerCardList[3][1].move(600,190)
+        self.playerCardList[1][0].move(600,300)
+        self.playerCardList[1][1].move(600,190)
+        self.playerCardList[2][0].move(400,50)
+        self.playerCardList[2][1].move(310,50)
+        self.playerCardList[3][0].move(90,190)
+        self.playerCardList[3][1].move(90,300)
 
-        self.centerCardList = []
-        for i in range(4):
-            lb2 = QLabel(self)
-            lb2.setPixmap(self.imgList[0])
-            self.centerCardList.append(lb2)
-
-        self.centerCardList[0].move(300,250)
-        self.centerCardList[1].move(400,250)
-        self.centerCardList[2].move(402,252)
-        self.centerCardList[3].move(404,254)
-
+        self.centerCardList = [QLabel(self) for i in range(16)]
+        self.grave = [QLabel(self) for i in range(16)]
+        for i in range(16):
+            self.centerCardList[i].setPixmap(self.backImg_78)
+            self.centerCardList[i].move(400+i*2,250+i*2)
+            self.grave[i].move(300+i*2,250+i*2)
+            self.grave[i].resize(78,103)
+        
         # 채팅창
         self.main_text = QTextEdit(self) # 메인 텍스트
         self.main_text.setReadOnly(True)
@@ -99,16 +101,47 @@ class MyApp(QWidget):
         # # ChatBox
         self.show()
         
+    def sysPrint(self,list):
+        while len(self.centerCardList) > int(list[0]):
+            self.centerCardList[int(list[0])].setHidden(True)
+            del self.centerCardList[int(list[0])]
+        for i in range(len(eval(list[1]))):
+            if i == 0:
+                self.grave[i].setPixmap(self.backImg_78)
+            else:
+                self.grave[i].setPixmap(QPixmap(r"E:/dev/python_workspace/W7(project)/img/"+str(list[1][i])+".jpg").scaled(78,103,Qt.KeepAspectRatio, Qt.FastTransformation))
+        for i,cardtype in enumerate(eval(list[2])):
+            self.playerCardList[0][i].setPixmap(QPixmap(r"E:\dev\python_workspace\W7(project)\img\{}.jpg".format(cardtype)).scaled(100,139,Qt.KeepAspectRatio, Qt.FastTransformation))
+            self.playerCardList[0][i].setHidden(False)
+        for i in range(len(list)-3):
+            for card in self.playerCardList[i+1]:
+                if self.playerCardList[i+1].index(card) < int(list[2+i+1]):
+                    card.setHidden(False)
+                else:
+                    card.setHidden(True)
+
     def displayError(self, e):
         QMessageBox.information(self, "Connection", "서버가 연결을 해제했습니다.")
 
     def readData(self):
         message = self.socket.readLine().data().decode("utf-8")
         if message == "NICK":
-            self.socket.write(self.userName.text())
+            self.socket.write(self.userName.text().encode("utf-8"))
         elif message.split(":")[0] == "sys":
-            if message.split(":")[1] == "turn":
-
+            msg = message.split(":")
+            print(msg)
+            if msg[1] == "print":
+                self.sysPrint(msg[2:-1])
+            elif msg[1] == "turn":
+                self.playerCardList[0][0].setPixmap(QPixmap(r"E:\dev\python_workspace\W7(project)\img\{}.jpg".format(msg[2])).scaled(100,139,Qt.KeepAspectRatio, Qt.FastTransformation))
+                self.playerCardList[0][0].resize(100,193)
+                self.playerCardList[0][1].setHidden(False)
+                self.playerCardList[0][1].setPixmap(QPixmap(r"E:\dev\python_workspace\W7(project)\img\{}.jpg".format(msg[3])).scaled(100,139,Qt.KeepAspectRatio, Qt.FastTransformation))
+                self.playerCardList[0][1].resize(100,193)
+            elif msg[1] == "notice":
+                pass
+            elif msg[1] == "D_notice":
+                pass
             print("시스템 메세지 입니다.")
         else:
             self.main_text.append(message)

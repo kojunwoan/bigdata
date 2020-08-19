@@ -3,15 +3,12 @@ import threading
 from card import Card
 from user import User
 from random import randint
+from random import choice
 
 def buildADeckOfCards():
     for ctype,item in enumerate(Cardinfo):
         for i in range(item.get("cnt")):
             CardL.append(Card(ctype+1,item.get("rank"),item.get("name"),item.get("img")))
-    for i in range(100):
-        a = randint(0,len(CardL)-1)
-        b = randint(0,len(CardL)-1)
-        CardL[a], CardL[b] = CardL[b], CardL[a]  
 
 
 Cardinfo = [{"rank" : 1,"name":"Guard Odette", "img":"1_guard.jpg","cnt" : 5},
@@ -37,7 +34,7 @@ server.listen()
 
 gaming = True
 clients = []
-
+nicknames = []
 def broadcast(msg):
     for client in clients:
         client.connectionSock.send(msg)
@@ -65,19 +62,56 @@ def receive():
         connectionSock.send("도시국가 템페스트에 오신 것을 환영합니다.".encode("utf-8"))
         nickname = connectionSock.recv(1024).decode("utf-8")
         clients.append(User(connectionSock,nickname))
-       
+        nicknames.append(nickname)
         threading.Thread(target=handle, args=(clients[-1],)).start()
 
 def game():
     global gaming
-    while gaming:
-        for client in clients:
-            client.prossessionCard.append(CardL[1])
-            del CardL[1]
-        clients[0].isTurn = True
-        clients[0].prossessionCard.append(CardL[1])
+    global clients
+    while len(clients) == 2:
+        while gaming:
+            turn = 0
+            grave = []
+            for client in clients:
+                card = choice(CardL)
+                client.prossessionCard.append(card)
+                CardL.remove(card)
+                for card in CardL:
+                    print(card.type, card.name)
+            while len(CardL)>1:
+                nowTurn = turn%len(clients)
+                if clients[nowTurn].isAlive:
+                    # clients[turn].isTurn = True
+                    #Print 판구조 변화
+                    msg = "sys:print:{}:{}:{}:{}:{}:{}".format(len(CardL),len(grave),len(clients[0].prossessionCard),len(clients[1].prossessionCard),len(clients[2].prossessionCard),len(clients[3].prossessionCard))
+                    clients.connectionSock.send(msg).encode("utf-8")                              
+                    #Turn
+                    card = choice(CardL)
+                    clients[nowTurn].prossessionCard.append(card)
+                    CardL.remove(card)
+                    msg = "sys:turn:{}:{}".format(clients[nowTurn].prossessionCard[0].type,clients[nowTurn].prossessionCard[1].type)
+                    clients[nowTurn].connectionSock.send(msg).encode("utf-8")
+                    codeL = clients[nowTurn].connectionSock.recv(1024).decode("utf-8").split(":")
+                    print(codeL)
+                    turn += 1
+                    #Print
+                    #Execute => return notice(대상에게 알림)
+                    target = User.execute(other, card)
+                    note = target[0]
+                    target = target[1:5]
+                    # for i in target:
+                        # if i == client.nick:
+                        # clients[i].connectionSock.send(note).encode("uft-8")
+                    for i in target:
+                        clients[i].connectionSock.send(note).encode("uft-8")
 
-        gaming = False
+
+
+
+
+
+
+
         
 receive()
 game()
