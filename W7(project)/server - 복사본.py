@@ -3,12 +3,15 @@ import threading
 from card import Card
 from user import User
 from random import randint
-from random import choice
 
 def buildADeckOfCards():
     for ctype,item in enumerate(Cardinfo):
         for i in range(item.get("cnt")):
             CardL.append(Card(ctype+1,item.get("rank"),item.get("name"),item.get("img")))
+    for i in range(100):
+        a = randint(0,len(CardL)-1)
+        b = randint(0,len(CardL)-1)
+        CardL[a], CardL[b] = CardL[b], CardL[a]  
 
 
 Cardinfo = [{"rank" : 1,"name":"Guard Odette", "img":"1_guard.jpg","cnt" : 5},
@@ -67,31 +70,14 @@ def receive():
 
 def game():
     global gaming
-    global clients
-    while len(clients) == 2:
-        while gaming:
-            turn = 0
-            # grave = []
-            for client in clients:
-                card = choice(CardL)
-                client.prossessionCard.append(card)
-                CardL.remove(card)
-                for card in CardL:
-                    print(card.type, card.name)
-            while len(CardL)>1:
-                nowTurn = turn%len(clients)
-                if clients[nowTurn].isAlive:
-                    # clients[turn].isTurn = True
-                    card = choice(CardL)
-                    clients[nowTurn].prossessionCard.append(card)
-                    CardL.remove(card)
-                    msg = "sys:{}:{}".format(clients[nowTurn].prossessionCard[0].type,clients[nowTurn].prossessionCard[1].type)
-                    clients[nowTurn].connectionSock.send(msg).encode("utf-8")
-                    codeL = clients[nowTurn].connectionSock.recv(1024).decode("utf-8").split(":")
-                    print(codeL)
-                    turn += 1
+    while gaming:
+        for client in clients:
+            client.prossessionCard.append(CardL[1])
+            del CardL[1]
+        clients[0].isTurn = True
+        clients[0].prossessionCard.append(CardL[1])
 
-
+        gaming = False
         
 receive()
 game()

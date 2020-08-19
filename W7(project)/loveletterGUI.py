@@ -37,12 +37,12 @@ class MyApp(QWidget):
         self.playerList[2].move(377,83)
         self.playerList[3].move(717,300)
 
-        # self.imgList = [img.scaled(78, 108, Qt.KeepAspectRatio, Qt.FastTransformation) for img in [QPixmap(r"E:\dev\python_workspace\W7(project)\img\{}.jpg".format(i)) for i in range(9)]]
+        self.imgList = [img.scaled(78, 108, Qt.KeepAspectRatio, Qt.FastTransformation) for img in [QPixmap(r"E:\dev\python_workspace\W7(project)\img\{}.jpg".format(i)) for i in range(9)]]
 
         self.playerCardList = [[QLabel(self) for i in range(2)] for j in range(4)]
-        # [[card.setPixmap(self.imgList[0]) for card in player] for player in self.playerCardList]
-        # for card in self.playerCardList[0]:
-        #     card.setPixmap(self.imgList[0].scaled(100,139,Qt.KeepAspectRatio, Qt.FastTransformation))
+        [[card.setPixmap(self.imgList[0]) for card in player] for player in self.playerCardList]
+        for card in self.playerCardList[0]:
+            card.setPixmap(self.imgList[0].scaled(100,139,Qt.KeepAspectRatio, Qt.FastTransformation))
         self.playerCardList[0][0].move(290,440)
         self.playerCardList[0][1].move(400,440)
         self.playerCardList[1][0].move(90,300)
