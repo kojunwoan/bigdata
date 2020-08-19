@@ -76,15 +76,18 @@ def game():
                 card = choice(CardL)
                 client.prossessionCard.append(card)
                 CardL.remove(card)
+                for card in CardL:
+                    print(card.type, card.name)
             while len(CardL)>1:
-                if clients[turn%len(clients)].isAlive:
+                nowTurn = turn%len(clients)
+                if clients[nowTurn].isAlive:
                     # clients[turn].isTurn = True
                     card = choice(CardL)
-                    clients[turn].prossessionCard.append(card)
+                    clients[nowTurn].prossessionCard.append(card)
                     CardL.remove(card)
-                    msg = "sys:{}:{}".format(clients[turn].prossessionCard[0].type,clients[turn].prossessionCard[1].type)
-                    clients[turn].connectionSock.send(msg).encode("utf-8")
-                    codeL = clients[turn].connectionSock.recv(1024).decode("utf-8").split(":")
+                    msg = "sys:turn:{}:{}".format(clients[nowTurn].prossessionCard[0].type,clients[nowTurn].prossessionCard[1].type)
+                    clients[nowTurn].connectionSock.send(msg).encode("utf-8")
+                    codeL = clients[nowTurn].connectionSock.recv(1024).decode("utf-8").split(":")
                     print(codeL)
                     turn += 1
 

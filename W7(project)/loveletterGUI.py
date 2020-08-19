@@ -3,6 +3,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore, QtWidgets, QtWidgets, QtNetwork
+from PyQt5 import *
+from card import Card
 
 class MyApp(QWidget):
     def __init__(self):
@@ -22,7 +24,7 @@ class MyApp(QWidget):
         self.move(0,0)
 
         # 배경 
-        bg_img = QPixmap(r"E:\dev\python_workspace\W7(project)\img\bg3_1200.jpg")
+        bg_img = QPixmap("E:\dev\python_workspace\img\bg3_1200.jpg")
         self.bg = QLabel("bg",self)
         self.bg.resize(1200,700)
         self.bg.setPixmap(bg_img)
@@ -35,12 +37,12 @@ class MyApp(QWidget):
         self.playerList[2].move(377,83)
         self.playerList[3].move(717,300)
 
-        self.imgList = [[QPixmap(r"E:\dev\python_workspace\W7(project)\img\{}_78.jpg".format(i)) for i in range(9)],
-                        [QPixmap(r"E:\dev\python_workspace\W7(project)\img\{}_100.jpg".format(i)) for i in range(9)]]
+        # self.imgList = [img.scaled(78, 108, Qt.KeepAspectRatio, Qt.FastTransformation) for img in [QPixmap(r"E:\dev\python_workspace\W7(project)\img\{}.jpg".format(i)) for i in range(9)]]
 
         self.playerCardList = [[QLabel(self) for i in range(2)] for j in range(4)]
-        [[card.setPixmap(self.imgList[1][0]) if self.playerCardList.index(player) == 0 else card.setPixmap(self.imgList[0][0]) for card in player] for player in self.playerCardList]
-
+        # [[card.setPixmap(self.imgList[0]) for card in player] for player in self.playerCardList]
+        # for card in self.playerCardList[0]:
+        #     card.setPixmap(self.imgList[0].scaled(100,139,Qt.KeepAspectRatio, Qt.FastTransformation))
         self.playerCardList[0][0].move(290,440)
         self.playerCardList[0][1].move(400,440)
         self.playerCardList[1][0].move(90,300)
@@ -53,7 +55,7 @@ class MyApp(QWidget):
         self.centerCardList = []
         for i in range(4):
             lb2 = QLabel(self)
-            lb2.setPixmap(self.imgList[0][0])
+            lb2.setPixmap(self.imgList[0])
             self.centerCardList.append(lb2)
 
         self.centerCardList[0].move(300,250)
@@ -92,7 +94,7 @@ class MyApp(QWidget):
         
         # # Game Rule
         self.gamerule = QLabel("※ 게임 방법 ※\n1 경비병: 상대를 선택하고 카드를 추측하여 맞으면 탈락한다\n2 사제: 대상 선택 후 가진 카드 확인\n3 남작: 대상 선택 후 자신의 카드와 비교하여 낮은 숫자가 탈락\n4 시녀: 다음 턴이 올 때까지 다른 카드의 능력 무효화\n5 왕자: 카드를 버리고 다시 뽑는다\n6 왕: 대상을 선택하고 카드를 교환한다\n7 백작부인: 5번 또는 6번 카드를 가지고 있으면 반드시 버려진다\n8 공주: 버리면 무조건 패배(버릴 수 없음)",self)
-        self.gamerule.move(800,5)
+        self.gamerule.move(800,30)
 
         # # ChatBox
         self.show()
@@ -104,6 +106,10 @@ class MyApp(QWidget):
         message = self.socket.readLine().data().decode("utf-8")
         if message == "NICK":
             self.socket.write(self.userName.text())
+        elif message.split(":")[0] == "sys":
+            if message.split(":")[1] == "turn":
+
+            print("시스템 메세지 입니다.")
         else:
             self.main_text.append(message)
 
@@ -128,17 +134,7 @@ class MyApp(QWidget):
             self.connectButton.setEnabled(False)
             self.send_button.setDefault(True)
             self.send_box.setFocus()
-
             print("연결성공")
-
-    def Turn(self, e):
-        self.p1_card1.setPixmap(self.guard_1_img_100)
-
-    def drawCard(self, e):
-        self.p1_card1.move(300,440)
-        self.p1_card2 = QLabel(self)        
-        self.p1_card2.setPixmap(self.back_img_100)
-        self.p1_card2.move(400,440)
         
 
 
