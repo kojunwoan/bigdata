@@ -110,9 +110,12 @@ class MyApp(QWidget):
                 self.grave[i].setPixmap(self.backImg_78)
             else:
                 self.grave[i].setPixmap(QPixmap(r"E:/dev/python_workspace/W7(project)/img/"+str(list[1][i])+".jpg").scaled(78,103,Qt.KeepAspectRatio, Qt.FastTransformation))
-        for i in range(len(list)-2):
-            for card in self.playerCardList[i]:
-                if self.playerCardList[i].index(card) < int(list[2+i]):
+        for i,cardtype in enumerate(eval(list[2])):
+            self.playerCardList[0][i].setPixmap(QPixmap(r"E:\dev\python_workspace\W7(project)\img\{}.jpg".format(cardtype)).scaled(100,139,Qt.KeepAspectRatio, Qt.FastTransformation))
+            self.playerCardList[0][i].setHidden(False)
+        for i in range(len(list)-3):
+            for card in self.playerCardList[i+1]:
+                if self.playerCardList[i+1].index(card) < int(list[2+i+1]):
                     card.setHidden(False)
                 else:
                     card.setHidden(True)

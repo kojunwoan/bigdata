@@ -1,26 +1,24 @@
 from card import Card
+from server import server
+from random import choice
 class User:
     def __init__(self,connectionSock,nick):
         self.connectionSock = connectionSock
         self.nick = nick
         self.isTurn = False
         self.isAlive = True
-        self.protected = False
+        self.isProtect = False
         self.selectedCard = None
         self.prossessionCard = []
 
     def takeCard(self,card):
         self.prossessionCard.append(card)
+        Card.remove(card)
 
     def useCard(self,n):
-        if self.prossessionCard[n].type in [5,6] and self.prossessionCard[(n+1)%2].type == 7 or self.prossessionCard[n].type == 8:
-            import socket
-            self.connectionSock.send("sys:reSelectCard".encode("utf-8"))
-            return False
-        else:
-            self.selectedCard = self.prossessionCard[n]
-            self.prossessionCard.remove(self.selectedCard)
-            return True
+        self.selectedCard = self.prossessionCard[n]
+        self.prossessionCard.remove(self.selectedCard)
+
 
     def execute(self, other, grave, ext=None):
         if self.selectedCard.type == 1:
@@ -54,7 +52,7 @@ class User:
         elif self.selectedCard.type == 4:
             #다음 턴까지 방어상태가 된다.
             # note1 = self.nick+"님이 4번 카드를 선택하였습니다"
-            self.protected = True
+            self.isProtect = True
             # note2 = self.nick+"님은 다음 턴까지 방어상태입니다. 다른 플레리어님들은 "+self.nick+"님을 공격할 수 없습니다."
             # return note1, note2
         elif self.selectedCard.type == 5:
@@ -77,3 +75,7 @@ class User:
             self.prossessionCard[0].type, other.prossessionCard[0].type = other.prossessionCard[0].type, self.prossessionCard[0].type
             # note2 = self.nick+"님이 6번카드 대상으로 "+other.nick+"님을 지정하였습니다."+self.nick+"님과 카드를 교환하세요."
             # return note1, note2
+
+
+            
+

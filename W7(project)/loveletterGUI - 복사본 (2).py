@@ -5,14 +5,18 @@ from PyQt5.QtCore import *
 from PyQt5 import QtCore, QtWidgets, QtWidgets, QtNetwork
 from PyQt5 import *
 from card import Card
-myTurn = False
+
 class MyApp(QWidget):
     def __init__(self):
         super().__init__()
         self.initUI()
     
-
-    # sys: selectuser : 1 : 2 : 3
+    # def Turn(self,e):
+    #     self.p1_card1.setPixmap(self.guard_1_img_100)
+    
+    
+    # def TurnBack(self,e):
+    #     self.p1_card1.setPixmap(self.back_img)
 
     def initUI(self):
         self.setWindowTitle("Love Letter♡")
@@ -53,9 +57,6 @@ class MyApp(QWidget):
         self.playerCardList[3][0].move(90,190)
         self.playerCardList[3][1].move(90,300)
 
-        self.playerCardList[0][0].mousePressEvent = self.sendSelected1
-        self.playerCardList[0][1].mousePressEvent = self.sendSelected2
-        
         self.centerCardList = [QLabel(self) for i in range(16)]
         self.grave = [QLabel(self) for i in range(16)]
         for i in range(16):
@@ -94,38 +95,21 @@ class MyApp(QWidget):
         self.socket.error.connect(self.displayError)
         
         # # Game Rule
-        self.gamerule = QLabel("""※ 게임 방법 ※
-        1 경비병: 상대를 선택하고 카드를 추측하여 맞으면 탈락한다
-        2 사제: 대상 선택 후 가진 카드 확인
-        3 남작: 대상 선택 후 자신의 카드와 비교하여 낮은 숫자가 탈락
-        4 시녀: 다음 턴이 올 때까지 다른 카드의 능력 무효화
-        5 왕자: 카드를 버리고 다시 뽑는다
-        6 왕: 대상을 선택하고 카드를 교환한다
-        7 백작부인: 5번 또는 6번 카드를 가지고 있으면 반드시 버려진다
-        8 공주: 버리면 무조건 패배(버릴 수 없음)""",self)
+        self.gamerule = QLabel("※ 게임 방법 ※\n1 경비병: 상대를 선택하고 카드를 추측하여 맞으면 탈락한다\n2 사제: 대상 선택 후 가진 카드 확인\n3 남작: 대상 선택 후 자신의 카드와 비교하여 낮은 숫자가 탈락\n4 시녀: 다음 턴이 올 때까지 다른 카드의 능력 무효화\n5 왕자: 카드를 버리고 다시 뽑는다\n6 왕: 대상을 선택하고 카드를 교환한다\n7 백작부인: 5번 또는 6번 카드를 가지고 있으면 반드시 버려진다\n8 공주: 버리면 무조건 패배(버릴 수 없음)",self)
         self.gamerule.move(800,30)
 
         # # ChatBox
         self.show()
-
+        
     def sysPrint(self,list):
-        for i in range(int(list[0])):
-            self.centerCardList[i].setHidden(False)
-        for i in range(int(list[0]),len(self.centerCardList)):
-            self.centerCardList[i].setHidden(True)
-        # while len(self.centerCardList) > int(list[0]):
-        #     self.centerCardList[int(list[0])].setHidden(True)
-        #     # del self.centerCardList[int(list[0])]
+        while len(self.centerCardList) > int(list[0]):
+            self.centerCardList[int(list[0])].setHidden(True)
+            del self.centerCardList[int(list[0])]
         for i in range(len(eval(list[1]))):
             if i == 0:
                 self.grave[i].setPixmap(self.backImg_78)
             else:
-                self.grave[i].setHidden(False)
-                self.grave[i].setPixmap(QPixmap(r"E:/dev/python_workspace/W7(project)/img/"+str(eval(list[1])[i])+".jpg").scaled(78,103,Qt.KeepAspectRatio, Qt.FastTransformation))
-        for i in range(len(eval(list[1])),len(self.grave)):
-            self.grave[i].setHidden(True)
-        for i in range(len(eval(list[2])),2):
-            self.playerCardList[0][i].setHidden(True)
+                self.grave[i].setPixmap(QPixmap(r"E:/dev/python_workspace/W7(project)/img/"+str(list[1][i])+".jpg").scaled(78,103,Qt.KeepAspectRatio, Qt.FastTransformation))
         for i,cardtype in enumerate(eval(list[2])):
             self.playerCardList[0][i].setPixmap(QPixmap(r"E:\dev\python_workspace\W7(project)\img\{}.jpg".format(cardtype)).scaled(100,139,Qt.KeepAspectRatio, Qt.FastTransformation))
             self.playerCardList[0][i].setHidden(False)
@@ -140,7 +124,6 @@ class MyApp(QWidget):
         QMessageBox.information(self, "Connection", "서버가 연결을 해제했습니다.")
 
     def readData(self):
-        global myTurn
         message = self.socket.readLine().data().decode("utf-8")
         if message == "NICK":
             self.socket.write(self.userName.text().encode("utf-8"))
@@ -152,11 +135,10 @@ class MyApp(QWidget):
                 self.sysPrint(msg[2:-1])
             elif msg[1] == "turn":
                 self.playerCardList[0][0].setPixmap(QPixmap(r"E:\dev\python_workspace\W7(project)\img\{}.jpg".format(msg[2])).scaled(100,139,Qt.KeepAspectRatio, Qt.FastTransformation))
-                # self.playerCardList[0][0].resize(100,193)
+                self.playerCardList[0][0].resize(100,193)
                 self.playerCardList[0][1].setHidden(False)
                 self.playerCardList[0][1].setPixmap(QPixmap(r"E:\dev\python_workspace\W7(project)\img\{}.jpg".format(msg[3])).scaled(100,139,Qt.KeepAspectRatio, Qt.FastTransformation))
-                # self.playerCardList[0][1].resize(100,193)
-                myTurn = True
+                self.playerCardList[0][1].resize(100,193)
             elif msg[1] == "notice":
                 pass
             elif msg[1] == "D_notice":
@@ -164,18 +146,6 @@ class MyApp(QWidget):
             print("시스템 메세지 입니다.")
         else:
             self.main_text.append(message)
-
-    def sendSelected1(self,e):
-        global myTurn
-        if myTurn:
-            self.send("sys:selectedCard:1")
-            myTurn = False
-
-    def sendSelected2(self,e):
-        global myTurn
-        if myTurn:
-            self.send("sys:selectedCard:2")
-            myTurn = False
 
     def send(self, message):
         self.socket.write(message.encode("utf-8"))
@@ -201,7 +171,9 @@ class MyApp(QWidget):
         
 
 
-
+    # 마우스 좌표 구하기
+    # print(pygame.mouse.get_pos())
+    px , py = pygame.mouse.get_pos()                            # px변수와 py변수 각각에 마우스의 현재 좌표 대입
 
 
 if __name__=="__main__":
