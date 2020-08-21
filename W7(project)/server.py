@@ -5,7 +5,7 @@ from user import User
 from random import choice
 import time
 
-forXpeople = 3
+forXpeople = 2
 
 def buildADeckOfCards():
     for ctype,item in enumerate(Cardinfo):
@@ -36,6 +36,8 @@ selected = False
 cmsg = ""
 clients = []
 grave = []
+target = -1
+targetT = -1
 
 def broadcast(msg):
     for client in clients:
@@ -46,9 +48,12 @@ def handle(client):
     global cmsg
     global grave
     global clients
+    global target
+    global targetT
     while True:
         try:
             msg = client.connectionSock.recv(1024).decode('utf-8')
+            print(msg)
             if msg[:3] == "sys":
                 cmsg = msg.split(":")
                 if cmsg[1] == "selectedCard":
@@ -58,22 +63,39 @@ def handle(client):
                             print(card[0].type, card[0].name)
                         if client.selectedCard.type in [4,7]:
                             selected = True
+                            makeSysPrint()
                         else:
-                            selected = True
-                        makeSysPrint()
+                            user = []
+                            for cli in clients:
+                                if cli.connectionSock == client.connectionSock and not client.selectedCard.type == 5:
+                                    continue
+                                if cli.isAlive and not cli.protected:
+                                    idx = clients.index(cli) - clients.index(client)
+                                    if idx < 0:
+                                        idx += len(clients)
+                                    user.append(idx,)
+                            if len(user) == 0:
+                                selected = True
+                                makeSysPrint()
+                            else:
+                                makeSysPrint()
+                                print("sys:selectUser:{}".format(user))
+                                client.connectionSock.send("sys:selectUser:{}".format(user).encode('utf-8'))
+                                time.sleep(0.2)
+                    else:
+                        client.connectionSock.send("sys:reSelectCard".encode("utf-8"))
+                        # time.sleep(0.2)
                 if cmsg[1] == "selectedUser":
-                    if clients[(clients.index(client)+int(cmsg[2])-1)%4].protected:
-                        unProCnt = 0
-                        for cli in clients:
-                            if cli.connectionSock == client.connectionSock:
-                                continue
-                            if cli.isAlive and not cli.protected:
-                                unProCnt += 1
-                        if unProCnt != 0:
-                            client.connectionSock.send("sys:reSelectUser".encode("uft-8"))
-                        else:
-                            grave.append([client.selectedCard,clients.index(client)])
-                            client.selectedCard=None
+                    target = clients[(int(cmsg[2])+clients.index(client))%len(clients)]
+                    print(target)
+                    if client.selectedCard.type == 1:
+                        print("1번카드 사용")
+                        client.connectionSock.send("sys:selectType".encode('utf-8'))
+                        # time.sleep(0.2)
+                    else:
+                        selected = True
+                if cmsg[1] == "selectedType":
+                    targetT = int(cmsg[2])
                     selected = True
             else:
                 broadcast(msg.encode('utf-8'))
@@ -110,7 +132,7 @@ def makeSysPrint():
         msg = "sys:print:{}:{}:{}:{}".format(len(CardL),graveCardType,clientCardType,submsg[2:])
         client.connectionSock.send(msg.encode("utf-8"))                              
         submsg = submsg[2:]+submsg[:2]
-    time.sleep(0.5)
+    
 
 def giveCard(user):
     global CardL
@@ -123,10 +145,14 @@ def game():
     global gaming
     global clients
     global cmsg
+    global CardL
     global grave
     global selected
+    global target
+    global targetT
     while len(clients) == forXpeople:
         while gaming:
+            CardL = []
             buildADeckOfCards()
             turn = 0
             grave = []
@@ -139,34 +165,44 @@ def game():
                 for card in CardL:
                     print(card.type, card.name)
             while len(CardL)>0:
-                nowTurn = turn%len(clients)
-                if clients[nowTurn].isAlive:
-                    clients[nowTurn].protected = False
+                client = clients[turn%len(clients)]
+                if client.isAlive:
+                    client.protected = False
                     makeSysPrint()
-                    giveCard(clients[nowTurn])
+                    time.sleep(0.2)
+                    giveCard(client)
                     makeSysPrint()
+                    time.sleep(0.2)
                     selected = False
-                    print(clients[nowTurn].prossessionCard[0].type)
-                    print(clients[nowTurn].prossessionCard[1].type)
-                    msg = "sys:turn:{}:{}".format(clients[nowTurn].prossessionCard[0].type,clients[nowTurn].prossessionCard[1].type)
-                    clients[nowTurn].connectionSock.send(msg.encode("utf-8"))
+                    print(client.prossessionCard[0].type)
+                    print(client.prossessionCard[1].type)
+                    msg = "sys:turn:{}:{}".format(client.prossessionCard[0].type,client.prossessionCard[1].type)
+                    client.connectionSock.send(msg.encode("utf-8"))
                     while not selected:
                         time.sleep(0.2)
-                    #sys:select 만들기
-                    print(cmsg)
-                    turn += 1
-                    #Print
+                    time.sleep(1)
+                    note = ""
+                    if client.selectedCard.type == 1:
+                        grave,note = client.execute(target,grave,targetT)
+                    elif client.selectedCard.type == 5:
+                        grave,CardL,note = client.execute(target,grave,CardL)
+                    elif client.selectedCard.type == 3:
+                        grave,note = client.execute(target,grave)
+                    elif client.selectedCard.type == 6:
+                        note = client.execute(target)
+                    else:
+                        note = client.execute()
                     makeSysPrint()
-                    # #Execute => return notice(대상에게 알림)
-                    # target = User.execute(msg.split(":")[1], msg.split(":")[2])
-                    # note = target[0]
-                    # target = target[1:5]
-                    # for i in target:
-                    #     clients[i].connectionSock.send(note.encode("uft-8"))
+                    time.sleep(0.2)
+                    cntAlive = 0
+                    for client in clients:
+                        if client.isAlive:
+                            cntAlive += 1
+                    if cntAlive==1:
+                        break
+                turn += 1
             for client in clients:
-                client.prossessionCard = []
-
-
+                client.init()
 
         
 receive()

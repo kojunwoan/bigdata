@@ -5,4 +5,3 @@ class Card:
         self.name = name
         self.frontImg = "E:/dev/python_workspace/W7(project)/img/{}.jpg".format(self.type)
         self.backImg = "E:/dev/python_workspace/W7(project)/img/0.jpg"
-    
