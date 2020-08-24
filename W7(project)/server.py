@@ -79,13 +79,13 @@ def handle(client):
                                 makeSysPrint()
                             else:
                                 makeSysPrint()
-                                print("sys:selectUser:{}".format(user))
-                                client.connectionSock.send("sys:selectUser:{}".format(user).encode('utf-8'))
+                                print("sys:selectPlayer:{}".format(user))
+                                client.connectionSock.send("sys:selectPlayer:{}".format(user).encode('utf-8'))
                                 time.sleep(0.2)
                     else:
                         client.connectionSock.send("sys:reSelectCard".encode("utf-8"))
                         # time.sleep(0.2)
-                if cmsg[1] == "selectedUser":
+                if cmsg[1] == "selectedPlayer":
                     target = clients[(int(cmsg[2])+clients.index(client))%len(clients)]
                     print(target)
                     if client.selectedCard.type == 1:
@@ -133,6 +133,13 @@ def makeSysPrint():
         client.connectionSock.send(msg.encode("utf-8"))                              
         submsg = submsg[2:]+submsg[:2]
     
+def nickPrint():
+    global clients
+    nickL = [client.nick for client in clients]
+    for client in clients:
+        client.connectionSock.send("sys:nick:{}".format(nickL).encode("utf-8"))
+        nickL.append(nickL[0])
+        del nickL[0]
 
 def giveCard(user):
     global CardL
@@ -154,6 +161,8 @@ def game():
         while gaming:
             CardL = []
             buildADeckOfCards()
+            nickPrint()
+            time.sleep(0.1)
             turn = 0
             grave = []
             card = choice(CardL)

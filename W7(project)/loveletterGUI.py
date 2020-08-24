@@ -17,7 +17,7 @@ class MyApp(QWidget):
         self.move(0,0)
 
         # 배경 
-        bg_img = QPixmap(r".\W7(project)\img\bg3_1200.jpg")
+        bg_img = QPixmap(r"E:\dev\python_workspace\W7(project)\img\bg3_1200.jpg")
         self.bg = QLabel("bg",self)
         self.bg.resize(1200,700)
         self.bg.setPixmap(bg_img)
@@ -31,14 +31,14 @@ class MyApp(QWidget):
         # self.playerList[0].alignment()
 
         # 공격대상 버튼
-        self.selUserBtnList = [QPushButton("Player{}".format(i+1), self) for i in range(4)]
-        self.selUserBtnList[0].setGeometry(355,400, 78,25)
-        self.selUserBtnList[1].setGeometry(600,420, 78,25)
-        self.selUserBtnList[2].setGeometry(355,160, 78,25)
-        self.selUserBtnList[3].setGeometry(90, 420, 78,25)
-        for i,btn in enumerate(self.selUserBtnList):
+        self.playerBtnList = [QPushButton("Player{}".format(i+1), self) for i in range(4)]
+        self.playerBtnList[0].setGeometry(355,400, 78,25)
+        self.playerBtnList[1].setGeometry(600,420, 78,25)
+        self.playerBtnList[2].setGeometry(355,160, 78,25)
+        self.playerBtnList[3].setGeometry(90, 420, 78,25)
+        for i,btn in enumerate(self.playerBtnList):
             btn.setHidden(True)
-            self.userBtnEvent(btn,i) 
+            self.playerBtnEvent(btn,i) 
         
         # 1번 카드 선택시 선택할 카드 버튼
         self.selTypeBtnList = [QPushButton("{}번".format(i+2), self) for i in range(7)]
@@ -51,7 +51,7 @@ class MyApp(QWidget):
             self.typeBtnEvent(btn,i)
 
 
-        self.backImg = QPixmap(r".\W7(project)\img\0.jpg").scaled(78,103,Qt.KeepAspectRatio, Qt.FastTransformation)
+        self.backImg = QPixmap(r"E:\dev\python_workspace\W7(project)\img\0.jpg").scaled(78,103,Qt.KeepAspectRatio, Qt.FastTransformation)
         self.playerCardList = [[QLabel(self) for i in range(2)] for j in range(4)]
         for player in self.playerCardList:
             for card in player:
@@ -122,12 +122,12 @@ class MyApp(QWidget):
         # # ChatBox
         self.show()
 
-    def userBtnEvent(self, btn, i):
-        btn.clicked.connect(lambda : self.userBtnEvent2(btn,i))
+    def playerBtnEvent(self, btn, i):
+        btn.clicked.connect(lambda : self.playerBtnEvent2(btn,i))
 
-    def userBtnEvent2(self, btn, i):
-        self.send("sys:selectedUser:{}".format(i))
-        for bt in self.selUserBtnList:
+    def playerBtnEvent2(self, btn, i):
+        self.send("sys:selectedPlayer:{}".format(i))
+        for bt in self.playerBtnList:
             bt.setHidden(True)
 
     def typeBtnEvent(self, btn, i):
@@ -149,12 +149,12 @@ class MyApp(QWidget):
                 card.setPixmap(self.backImg)
             elif i < len(eval(list[1])):
                 card.setHidden(False)
-                card.setPixmap(QPixmap(r"./W7(project)/img/"+str(eval(list[1])[i])+".jpg").scaled(78,103,Qt.KeepAspectRatio, Qt.FastTransformation))
+                card.setPixmap(QPixmap(r"E:\dev\python_workspace\W7(project)\img/"+str(eval(list[1])[i])+".jpg").scaled(78,103,Qt.KeepAspectRatio, Qt.FastTransformation))
             else:
                 card.setHidden(True)
         for i,card in enumerate(self.playerCardList[0]):
             if i < len(eval(list[2])):
-                self.playerCardList[0][i].setPixmap(QPixmap(r".\W7(project)\img\{}.jpg".format(eval(list[2])[i])).scaled(100,139,Qt.KeepAspectRatio, Qt.FastTransformation))
+                self.playerCardList[0][i].setPixmap(QPixmap(r"E:\dev\python_workspace\W7(project)\img\{}.jpg".format(eval(list[2])[i])).scaled(100,139,Qt.KeepAspectRatio, Qt.FastTransformation))
                 self.playerCardList[0][i].setHidden(False)
             else :
                 card.setHidden(True)
@@ -184,13 +184,20 @@ class MyApp(QWidget):
                 myTurn = True
             elif msg[1] == "reSelectCard":
                 myTurn = True
-            elif msg[1] == "selectUser":
-                target = eval(msg[2])
-                for idx in target:
-                    self.selUserBtnList[idx].setHidden(False)
+            elif msg[1] == "selectPlayer":
+                for idx in eval(msg[2]):
+                    self.playerBtnList[idx].setHidden(False)
             elif msg[1] == "selectType":
                 for btn in self.selTypeBtnList:
                     btn.setHidden(False)
+            elif msg[1] == "nick":
+                for i in range(len(self.playerList)):
+                    if i < len(eval(msg[2])):
+                        self.playerList[i].setText(eval(msg[2])[i])
+                        self.playerBtnList[i].setText(eval(msg[2])[i])
+                    else:
+                        self.playerList[i].setHidden(True)
+                        self.playerBtnList[i].setHidden(True)
             elif msg[1] == "notice":
                 pass
             elif msg[1] == "D_notice":
@@ -227,7 +234,7 @@ class MyApp(QWidget):
         self.socket.connectToHost(self.server_ip, self.port_address)
         if self.socket.waitForConnected(1000):
             self.user = self.userName.text()
-            self.send("login %s" % self.user)
+            self.send(self.user)
             self.connectButton.setEnabled(False)
             self.send_button.setDefault(True)
             self.send_box.setFocus()
