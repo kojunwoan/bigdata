@@ -5,12 +5,6 @@ from user import User
 from random import choice
 import time
 
-forXpeople = 2
-
-def buildADeckOfCards():
-    for ctype,item in enumerate(Cardinfo):
-        for i in range(item.get("cnt")):
-            CardL.append(Card(ctype+1,item.get("rank"),item.get("name"),item.get("img")))
 
 
 Cardinfo = [{"rank" : 1,"name":"Guard Odette", "img":"1_guard.jpg","cnt" : 5},
@@ -22,7 +16,7 @@ Cardinfo = [{"rank" : 1,"name":"Guard Odette", "img":"1_guard.jpg","cnt" : 5},
         {"rank" : 7,"name":"Countess Wilhelmina", "img":"7_countess.jpg","cnt" : 1},
         {"rank" : 8,"name":"Princess Annette", "img":"8_princess.jpg","cnt" : 1}]
 
-CardL = []
+CardL = [Card(ctype+1,item.get("rank"),item.get("name"),item.get("img")) for ctype,item in enumerate(Cardinfo) for i in range(item.get("cnt"))]
 host = ""
 port = 5000
 
@@ -36,8 +30,9 @@ selected = False
 cmsg = ""
 clients = []
 grave = []
-target = -1
-targetT = -1
+target = None
+targetT = None
+ending = True
 
 def broadcast(msg):
     for client in clients:
@@ -50,6 +45,7 @@ def handle(client):
     global clients
     global target
     global targetT
+    global ending
     while True:
         try:
             msg = client.connectionSock.recv(1024).decode('utf-8')
@@ -81,11 +77,9 @@ def handle(client):
                                 makeSysPrint()
                                 print("sys:selectPlayer:{}".format(user))
                                 client.connectionSock.send("sys:selectPlayer:{}".format(user).encode('utf-8'))
-                                time.sleep(0.2)
                     else:
                         client.connectionSock.send("sys:reSelectCard".encode("utf-8"))
-                        # time.sleep(0.2)
-                if cmsg[1] == "selectedPlayer":
+                elif cmsg[1] == "selectedPlayer":
                     target = clients[(int(cmsg[2])+clients.index(client))%len(clients)]
                     print(target)
                     if client.selectedCard.type == 1:
@@ -94,9 +88,12 @@ def handle(client):
                         # time.sleep(0.2)
                     else:
                         selected = True
-                if cmsg[1] == "selectedType":
+                elif cmsg[1] == "selectedType":
                     targetT = int(cmsg[2])
                     selected = True
+                elif cmsg[1] == "start":
+                    print("스타트하래")
+                    ending = False
             else:
                 broadcast(msg.encode('utf-8'))
         except: 
@@ -107,18 +104,19 @@ def handle(client):
             break
 
 def receive():
-    global forXpeople
-    while len(clients) < forXpeople:
+    global ending
+    while (len(clients) < 4) and ending:
         print("클라이언트 접속 중")
         connectionSock, addr = server.accept()
         print(str(addr)+"로부터 연결됨")
-
         connectionSock.send("NICK".encode("utf-8"))
-        connectionSock.send("도시국가 템페스트에 오신 것을 환영합니다.".encode("utf-8"))
+        print("nick")
         nickname = connectionSock.recv(1024).decode("utf-8")
+        connectionSock.send("떡잎마을에 오신 것을 환영합니다.".encode("utf-8"))
         clients.append(User(connectionSock,nickname))
-       
         threading.Thread(target=handle, args=(clients[-1],)).start()
+        if len(clients) == 1:
+            connectionSock.send("sys:youAreFirst".encode("utf-8")) 
 
 def makeSysPrint():
     global clients
@@ -126,13 +124,35 @@ def makeSysPrint():
     submsg = ""
     for client in clients:
         submsg += str(len(client.prossessionCard))+":"
+    graveCardType = [card.type for card,user in grave]
     for client in clients:
-        graveCardType = [card.type for card,user in grave]
         clientCardType = [card.type for card in client.prossessionCard]
         msg = "sys:print:{}:{}:{}:{}".format(len(CardL),graveCardType,clientCardType,submsg[2:])
         client.connectionSock.send(msg.encode("utf-8"))                              
         submsg = submsg[2:]+submsg[:2]
     
+def makeSysPrintTarget(player1, player2):
+    global clients
+    submsg = ""
+    for client in clients:
+        if client in [player1,player2]:
+            submsg += str([client.prossessionCard[0].type]) + ":"
+        else:
+            submsg += str(len(client.prossessionCard)) + ":"
+    graveCardType = [card.type for card,user in grave]
+    for client in clients:
+        if client == player1:
+            msg = "sys:print:{}:{}:{}".format(len(CardL),graveCardType,submsg)
+            client.connectionSock.send(msg.encode("utf-8"))                     
+        if len(submsg.split(":")[0]) == 1:
+            submsg = submsg[2:]+submsg[:2]
+        else:
+            submsg = submsg[4:]+submsg[:4]
+
+#호감도 토큰의 개수 전달   
+def printFavorability():
+    pass
+
 def nickPrint():
     global clients
     nickL = [client.nick for client in clients]
@@ -147,8 +167,7 @@ def giveCard(user):
     user.takeCard(card)
     CardL.remove(card)
 
-def game():
-    global forXpeople
+def game(numCl):
     global gaming
     global clients
     global cmsg
@@ -157,10 +176,12 @@ def game():
     global selected
     global target
     global targetT
-    while len(clients) == forXpeople:
+    global ending
+    first = 0
+    while len(clients) == numCl:
         while gaming:
             CardL = []
-            buildADeckOfCards()
+            CardL = [Card(ctype+1,item.get("rank"),item.get("name"),item.get("img")) for ctype,item in enumerate(Cardinfo) for i in range(item.get("cnt"))]
             nickPrint()
             time.sleep(0.1)
             turn = 0
@@ -168,13 +189,15 @@ def game():
             card = choice(CardL)
             grave.append([card,-1])
             CardL.remove(card)
+            grave[0][0].type=0
             print(grave[0][0].type, grave[0][0].name)
             for client in clients:
                 giveCard(client)
                 for card in CardL:
                     print(card.type, card.name)
             while len(CardL)>0:
-                client = clients[turn%len(clients)]
+                target = None
+                client = clients[(first+turn)%len(clients)]
                 if client.isAlive:
                     client.protected = False
                     makeSysPrint()
@@ -183,12 +206,15 @@ def game():
                     makeSysPrint()
                     time.sleep(0.2)
                     selected = False
-                    print(client.prossessionCard[0].type)
-                    print(client.prossessionCard[1].type)
-                    msg = "sys:turn:{}:{}".format(client.prossessionCard[0].type,client.prossessionCard[1].type)
-                    client.connectionSock.send(msg.encode("utf-8"))
+                    client.connectionSock.send("sys:turn".encode("utf-8"))
                     while not selected:
                         time.sleep(0.2)
+                    time.sleep(1)
+                    if client.selectedCard.type == 2:
+                        makeSysPrintTarget(client, target)
+                    if client.selectedCard.type == 3:
+                        makeSysPrintTarget(client, target)
+                        makeSysPrintTarget(target, client)
                     time.sleep(1)
                     note = ""
                     if client.selectedCard.type == 1:
@@ -203,16 +229,38 @@ def game():
                         note = client.execute()
                     makeSysPrint()
                     time.sleep(0.2)
-                    cntAlive = 0
+                    cntAlive = 0 
                     for client in clients:
                         if client.isAlive:
                             cntAlive += 1
                     if cntAlive==1:
+                        for client in clients:
+                            if client.isAlive:
+                                first = clients.index(client)
+                        ending = True
                         break
                 turn += 1
+                if len(CardL) == 0:
+                    clientCardType = [cli.prossessionCard[0].type if cli.isAlive else -1 for cli in clients]
+                    if clientCardType.count(max(clientCardType)) == 1:
+                        first = clientCardType.index(max(clientCardType))
+                    else:
+                        sumRank = [0 for i in clients]
+                        for card,cli in grave:
+                            if cli != -1:
+                                sumRank[cli] += card.rank
+                        first = sumRank.index(max(sumRank))
+            clients[first].connectionSock.send("sys:youAreFirst".encode("utf-8")) 
+            clients[first].favorability += 1
+            printFavorability()
+            while ending:
+                time.sleep(0.2)
             for client in clients:
                 client.init()
 
-        
-receive()
-game()
+
+threading.Thread(target=receive).start()
+while ending:
+    time.sleep(0.2)
+print("게임 시작")
+game(len(clients))
