@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['W7(project)\\loveletterGUI.py'],
+a = Analysis(['loveletterGUI.py', 'cd', 'e:\\dev\\python_workspace'],
              pathex=['E:\\dev\\python_workspace'],
              binaries=[],
              datas=[],

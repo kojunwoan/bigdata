@@ -30,7 +30,7 @@ class User:
             return True
 
     def execute(self, other=None, grave=None, ext=None):
-        note = []
+        note = ""
         if self.selectedCard.type == 1:
             #상대 카드의 랭크와 이름을 모두 맞춰야 한다.
             # note1 = self.nick+"이 "+other.nick+"의 카드를 "+ext+"로 추측하였습니다."#모두
@@ -40,15 +40,16 @@ class User:
                     other.isAlive = False
                     grave.append([other.prossessionCard[0],-1])
                     other.prossessionCard.remove(other.prossessionCard[0])
-                # note2 = self.nick+"의 공격이 성공하여 "+other.nick+"님이 운명하셨습니다."#모두
-            # else:
-            #     note2 = self.nick+"의 공격이 실패하였습니다."#모두
+                    note = self.nick+"의 공격이 성공하여 "+other.nick+"님이 운명하셨습니다."#모두
+                else:
+                    note = "{}의 공격({}번 카드)이 {}님에게 실패하였습니다.".format(self.nick,ext,other.nick)#모두
             # note.append(note2)
             # print(self.selectedCard.type, other.prossessionCard[0].type, ext, grave)
             return grave, note
         elif self.selectedCard.type == 2:
             #상대 카드를 본다.
-            # note1 = self.nick+"님이 "+other.nick+"님의 카드를 선택하였습니다."#모두
+            if other != None:
+                note = self.nick+"님이 "+other.nick+"님의 카드를 확인 하였습니다."#모두
             # note.append(note1)
             # note2 = other.nick+"의 카드는 "+other.prossessionCard[0].type+"번 입니다."#본인
             # note.append(note2)
@@ -63,12 +64,12 @@ class User:
                     self.isAlive = False
                     grave.append([self.prossessionCard[0],-1])
                     self.prossessionCard.remove(self.prossessionCard[0])
-                    # note2 = other.nick+"님이 대결에서 승리하여 "+self.nick+"님이 운명하셨습니다. "#모두
+                    note = other.nick+"님이 대결에서 승리하여 "+self.nick+"님이 운명하셨습니다. "#모두
                 elif other.prossessionCard[0].type < self.prossessionCard[0].type:
                     other.isAlive = False
                     grave.append([other.prossessionCard[0],-1])
                     other.prossessionCard.remove(other.prossessionCard[0])
-                # note2 = self.nick+"님이 대결에서 승리하여 "+other.nick+"님이 운명하셨습니다. "#모두
+                    note = self.nick+"님이 대결에서 승리하여 "+other.nick+"님이 운명하셨습니다. "#모두
             # note.append(note2)
             # print(self.prossessionCard[0].type, other.prossessionCard[0].type, grave)
             return grave, note
@@ -77,7 +78,7 @@ class User:
             # note1 = self.nick+"님이 4번 카드를 선택하였습니다"#모두
             # note.append(note1)
             self.protected = True
-            # note2 = self.nick+"님은 다음 턴까지 방어상태입니다. 다른 플레리어님들은 "+self.nick+"님을 공격할 수 없습니다."#모두
+            note = self.nick+"님은 다음 턴까지 방어상태입니다./다른 플레리어님들은 "+self.nick+"님을 공격할 수 없습니다."#모두
             # note.append(note2)
             # print(self.selectedCard.type, self.protected)
             return note
@@ -92,13 +93,17 @@ class User:
                     other.isAlive= False
                     grave.append([other.prossessionCard[0],-1])
                     other.prossessionCard.remove(other.prossessionCard[0])
-                    # note3 = other.nick"님의 8번 카드가 공개되며 운명하셨습니다."
+                    note = self.nick+"님이 5번카드 대상으로 "+other.nick+"님을 지정하였습니다./"+other.nick+"님의 8번 카드가 공개되며 운명하셨습니다."
                 else:
                     grave.append([other.prossessionCard[0],-1])
                     other.prossessionCard.remove(other.prossessionCard[0])
-                    other.prossessionCard.append(choice(ext))
+                    if len(ext) != 0:
+                        other.prossessionCard.append(choice(ext))
+                    else:
+                        other.prossessionCard.append(grave[0][0])
+                        del grave[0]
                     ext.remove(other.prossessionCard[0])
-                    # note3 = other.nick+"님이 새 카드를 뽑으셨습니다."
+                    note = self.nick+"님이 5번카드 대상으로 "+other.nick+"님을 지정하였습니다./"+other.nick+"님이 새 카드를 뽑으셨습니다."
             # note.append(note3)
             # print(self.selectedCard.type, other.prossessionCard[0].type, grave)
             return grave, ext, note
@@ -108,7 +113,7 @@ class User:
             # note.append(note1)
             if other != None:
                 other.prossessionCard[0], self.prossessionCard[0] = self.prossessionCard[0], other.prossessionCard[0]
-            # note2 = self.nick+"님이 6번카드 대상으로 "+other.nick+"님을 지정하였습니다."+self.nick+"님과 카드를 교환하세요."
+                note = self.nick+"님이 6번카드 대상으로 "+other.nick+"님을 지정하였습니다."
             # note.append(note2)
             # print(self.selectedCard.type, other.prossessionCard[0].type, grave)
             return note
